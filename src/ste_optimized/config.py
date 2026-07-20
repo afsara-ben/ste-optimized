@@ -82,6 +82,11 @@ class TrainConfig:
     chunk_rows: int = 8             # pass-2 gradient-accumulation chunk size
     min_row_survival: float = 0.8   # accept update if >=80% rows EOS-terminate
     max_updates: int = 300
+    # Optional hard bounds for short smoke runs.  Attempts include updates
+    # rejected by the survival gate; the wall bound is checked between
+    # updates (an in-flight native Qwen generation is not interrupted).
+    max_attempts: int | None = None
+    max_wall_seconds: float | None = None
     eval_every: int = 25
     early_stop_patience: int = 5
     lr: float = 1e-3
