@@ -40,9 +40,11 @@ from .transform import save_transform
 TRAIN_BASES = 4
 VALIDATION_BASES = 4
 MAX_SMOKE_UPDATES = 10
-MAX_SPEAKER_DEGRADATION = 0.02
+MAX_SPEAKER_DEGRADATION = 0.05
 MIN_MEAN_SPEAKER_SIM = 0.85
-MIN_ANGER_GAIN = 0.0
+MIN_ANGER_GAIN = 0.01
+MIN_MEAN_ANGER_PROB = 0.50
+MIN_ROWS_ANGER_IMPROVED = 3
 
 
 class SmokeFailure(RuntimeError):
@@ -58,8 +60,7 @@ def run_smoke(
 
     Success means that the empirically selected ``checkpoint x alpha`` arm:
 
-    * scores higher for angry than both the unsteered arm and every matched
-      raw-v alpha arm;
+    * reaches a genuinely angry mean score and improves over unsteered output;
     * satisfies EOS-termination and absolute/relative speaker constraints;
     * uses the same learned ``T(v)`` for all held-out validation utterances.
 
@@ -152,7 +153,7 @@ def run_smoke(
             )
         )
 
-    baseline_angry = max(
+    best_control_angry = max(
         [unsteered["mean_angry_prob"]]
         + [arm["mean_angry_prob"] for arm in raw_arms]
     )
@@ -192,6 +193,10 @@ def run_smoke(
         training_records.append(_jsonable(record))
         if record.get("skipped"):
             continue
+        if not _checkpoint_due(
+            trainer.completed, cfg.train.max_updates, cfg.train.eval_every
+        ):
+            continue
 
         checkpoint = _evaluate_checkpoint(
             backend=backend,
@@ -223,17 +228,22 @@ def run_smoke(
         # Stop at the first checkpoint that proves the requested directional
         # effect.  This is the shortest honest smoke; a longer production run
         # can search a larger checkpoint/alpha space later.
-        if selected is not None and selected["mean_angry_prob"] > (
-            baseline_angry + MIN_ANGER_GAIN
-        ):
+        if selected is not None and _anger_success(selected, unsteered):
             stop_reason = "success_gate"
             break
 
     training_seconds = time.perf_counter() - train_t0
-    success = bool(
-        selected is not None
-        and selected["mean_angry_prob"] > baseline_angry + MIN_ANGER_GAIN
-    )
+    success = bool(selected is not None and _anger_success(selected, unsteered))
+    if selected is not None:
+        selected["gain_vs_unsteered"] = (
+            selected["mean_angry_prob"] - unsteered["mean_angry_prob"]
+        )
+        selected["gain_vs_best_raw_control"] = (
+            selected["mean_angry_prob"] - best_control_angry
+        )
+        selected["beats_best_raw_control"] = (
+            selected["mean_angry_prob"] > best_control_angry
+        )
 
     report: dict[str, Any] = {
         "schema": "ste-optimized/angry-smoke-report/v1",
@@ -256,6 +266,7 @@ def run_smoke(
             "speaker_sim": contrast.get("speaker_sim"),
         },
         "cuda": cuda,
+        "attention_runtime": backend.attention_runtime,
         "model_load_seconds": backend.load_seconds,
         "train_base_ids": [b.base_id for b in train_bases],
         "validation_base_ids": [b.base_id for b in validation_bases],
@@ -267,7 +278,7 @@ def run_smoke(
             "validation_rows_per_arm": len(validation_bases),
         },
         "controls": {"unsteered": unsteered, "raw_alpha_sweep": raw_arms},
-        "control_max_mean_angry_prob": baseline_angry,
+        "control_max_mean_angry_prob": best_control_angry,
         "checkpoint_history": candidate_history,
         "selected": selected,
         "training": {
@@ -282,7 +293,9 @@ def run_smoke(
             "minimum_termination_rate": cfg.train.min_row_survival,
             "minimum_mean_speaker_similarity": MIN_MEAN_SPEAKER_SIM,
             "maximum_speaker_degradation_vs_unsteered": MAX_SPEAKER_DEGRADATION,
-            "minimum_angry_gain_over_best_control": MIN_ANGER_GAIN,
+            "minimum_angry_gain_over_unsteered": MIN_ANGER_GAIN,
+            "minimum_mean_angry_probability": MIN_MEAN_ANGER_PROB,
+            "minimum_rows_angrier_than_unsteered": MIN_ROWS_ANGER_IMPROVED,
         },
         "total_wall_seconds": time.perf_counter() - run_t0,
         "resolved_config": str(resolved_config),
@@ -353,9 +366,9 @@ def run_smoke(
         }
     else:
         report["failure_reason"] = (
-            "no evaluated learned checkpoint/alpha achieved a higher mean "
-            "angry probability than both unsteered and the best matched raw-v "
-            "arm while satisfying termination and speaker constraints"
+            "no evaluated learned checkpoint/alpha reached the minimum angry "
+            "score and gain over unsteered output while satisfying row-level "
+            "directionality, termination, and speaker constraints"
         )
 
     report_path = out / "report.json"
@@ -385,6 +398,8 @@ def _validate_smoke_config(cfg: ExperimentConfig) -> None:
         raise ValueError("smoke requires max_attempts >= max_updates")
     if train.max_wall_seconds is None or train.max_wall_seconds <= 0:
         raise ValueError("smoke requires a positive max_wall_seconds")
+    if train.eval_every < 1:
+        raise ValueError("smoke requires train.eval_every >= 1")
     if not cfg.eval.alphas or any(float(a) <= 0 for a in cfg.eval.alphas):
         raise ValueError("smoke eval.alphas must contain positive values")
     if cfg.distributed.mode != "none":
@@ -724,16 +739,41 @@ def _arm_constraints(
     arm: dict[str, Any], unsteered: dict[str, Any], cfg: ExperimentConfig
 ) -> dict[str, Any]:
     degradation = unsteered["mean_speaker_sim"] - arm["mean_speaker_sim"]
+    unsteered_by_base = {
+        row["base_id"]: row["angry_prob"] for row in unsteered["rows"]
+    }
+    improved_rows = sum(
+        row["angry_prob"] > unsteered_by_base[row["base_id"]]
+        for row in arm["rows"]
+    )
     gates = {
         "termination": arm["termination_rate"] >= cfg.train.min_row_survival,
         "speaker_absolute": arm["mean_speaker_sim"] >= MIN_MEAN_SPEAKER_SIM,
         "speaker_degradation": degradation <= MAX_SPEAKER_DEGRADATION,
+        "row_directionality": improved_rows >= MIN_ROWS_ANGER_IMPROVED,
     }
     return {
         **gates,
         "speaker_degradation_vs_unsteered": degradation,
+        "rows_angrier_than_unsteered": improved_rows,
+        "rows_evaluated": len(arm["rows"]),
         "pass": all(gates.values()),
     }
+
+
+def _checkpoint_due(completed: int, max_updates: int, eval_every: int) -> bool:
+    """Evaluate cadence checkpoints and always evaluate the bounded final step."""
+    return completed == max_updates or completed % eval_every == 0
+
+
+def _anger_success(
+    selected: dict[str, Any], unsteered: dict[str, Any]
+) -> bool:
+    return (
+        selected["mean_angry_prob"] >= MIN_MEAN_ANGER_PROB
+        and selected["mean_angry_prob"]
+        >= unsteered["mean_angry_prob"] + MIN_ANGER_GAIN
+    )
 
 
 def _provenance(

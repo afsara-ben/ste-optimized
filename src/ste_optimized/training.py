@@ -270,9 +270,13 @@ class Trainer:
 
     # ----------------------------------------------------------------- utils
     def _assert_gradient_contract(self) -> None:
+        grad_norm_sq = 0.0
         for p in self.transform.parameters():
             if p.grad is None or not torch.isfinite(p.grad).all():
                 raise RuntimeError("transform gradient missing or non-finite")
+            grad_norm_sq += float(p.grad.detach().float().pow(2).sum())
+        if grad_norm_sq <= 0.0:
+            raise RuntimeError("transform gradient is exactly zero")
         # tripwire on EVERY frozen model in the loss path — the codec lives
         # outside tts.model.parameters() (plain-class wrapper), so it must be
         # checked explicitly, as must both experts.

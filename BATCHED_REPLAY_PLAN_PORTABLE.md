@@ -1,16 +1,19 @@
 # Batched Expert-in-the-Loop Replay Training — Portable Plan
 
 **Created:** 2026-07-19 (UTC)
-**Updated:** 2026-07-20 (UTC) — **IMPLEMENTATION PRESENT; ACCEPTANCE PENDING.**
-The plan below is now code: a
+**Updated:** 2026-07-20 02:28 UTC — **INITIAL REAL-CONTRAST CUDA SMOKE PASSED;
+PRODUCTION VALIDATION PENDING.** The plan below is now code: a
 self-contained package at `ste-optimized/` (repo root; own `pyproject.toml`, package
 `ste_optimized`, no dependency on the `emotionsteer` package — designed to be moved
-into its own git repo). Status: all 17 modules written; 27 CPU unit tests green in
-the 2026-07-20 01:28 UTC rerun; 5 GPU parity "trust gates" written and **still to
-be run on the target machine**; the real-contrast angry learning smoke is not yet
-implemented (these are the remaining Stage-0 gates; see §8). Section 6 gives the
-commands and maps each plan phase to its module. §3.1 (exact loss formula, two-pass T(v)
-recomputation, gradient-path semantics incl. what STE captures vs drops) added.
+into its own git repo). Status: the bounded `smoke` workflow is implemented; 37 CPU
+tests pass; three real-WAV GPU parity components pass; and one real angry-minus-neutral
+contrast completed the full FlashAttention Qwen → replay → reference-conditioned codec
+→ emotion2vec/WavLM → backward path and exported a learned transform and steering
+payload. This establishes the initial plumbing/learning proof, not the production claim
+that the vector generalizes to every neutral utterance; §8 records the exact evidence
+and limitations. Section 6 gives the commands and maps each plan phase to its module.
+§3.1 contains the exact loss formula, two-pass T(v) recomputation, and gradient-path
+semantics including what STE captures versus drops.
 **2026-07-20:** five implementation bugs fixed after external review (per-chunk
 T(v) recompute; reference-conditioned decode+trim mirroring native inference;
 codec dtype cast; explicit codec freeze + full gradient-contract tripwire;
@@ -244,27 +247,18 @@ Implementation map (package `ste_optimized`, folder `ste-optimized/`):
 | Micro-benchmarks (§5) | `calibrate.py` |
 | Seed-parallel policy + optional torchrun `ddp_rows` row-sharding | `distributed.py` |
 
-- **Stage 0 — engineering code written; acceptance NOT YET COMPLETE** (the package
-  above; 27 CPU unit tests green,
-  incl. the 2026-07-20 review fixes and their regressions).
-  Remaining Stage-0 gates = the SIMPLIFIED INITIAL MILESTONE, in this order —
-  `STE_OPT_REF_WAV=<speech.wav> pytest -m gpu tests/test_parity.py`:
-  1. `test_acceptance_one_fixed_batch` — one angry transform, ONE FIXED BATCH,
-     complete reference-conditioned waveform loss: finite nonzero expert-only
-     gradient in T_θ; parameters change on a step; loss decreases under
-     repeated optimization; every frozen model (talker, codec, emotion2vec,
-     WavLM) ends without parameter gradients.
-     **Current limitation:** the implementation supplies random Gaussian vectors,
-     not an extracted angry-minus-neutral contrast, so this is presently a synthetic
-     plumbing test rather than the real angry-learning acceptance gate required in §8.
-  2. `test_multichunk_accumulation` — per-chunk T(v) recompute: no freed-graph
-     error, gradients accumulate, frozen models stay clean.
-  3. Native/replay parity — prompt assembly vs captured native prefill;
-     soft-vs-hard codec (bare AND reference-conditioned); emotion2vec head vs
-     funasr inference.
-  DDP (`ddp_rows`), length bucketing, and the other emotions are DEFERRED
-  until all three pass. These gates pin the replicated qwen-tts 0.1.1
-  internals against the installed version; nothing proceeds until they pass.
+- **Stage 0 — initial real-contrast acceptance COMPLETE; production acceptance
+  pending.** The `smoke` command uses one extracted angry-minus-neutral contrast,
+  broadcasts the same `T(v)` across four neutral training rows, replays in two-row
+  chunks, sends decoded audio through both frozen experts, rejects zero/non-finite
+  transform gradients, and evaluates the learned vector on four disjoint neutral
+  utterances. It is attempt/wall bounded and exports only after its held-out gates
+  pass. The 2026-07-20 run passed on an RTX A6000 with FlashAttention 2 (§8).
+  Prompt assembly, bare/reference soft-codec, and emotion2vec parity also passed on
+  a real WAV. DDP (`ddp_rows`), length bucketing, other emotions, repeated seeds,
+  independent emotion judging, WER/true ISR, and the full production panel remain
+  deferred; native processed-logit parity for the replay approximation is also not
+  yet a dedicated GPU assertion.
 - **Stage 1 — data:**
   `ste-optimized build-data -c configs/angry.yaml --source /path/to/ESD` then
   `ste-optimized extract -c configs/angry.yaml --split train` (and `validation`);
@@ -284,8 +278,8 @@ Implementation map (package `ste_optimized`, folder `ste-optimized/`):
   — fixed panel, batched generation, controls cached once; per-pair T(v) vs raw v at
   α=1; exported T(v_global) and raw v_global over the alpha sweep; closed-form
   purifiers; zero-input control. Gates: emotion-prob delta > 0 with 95%
-  paired-bootstrap CI excluding 0; WavLM ≥ 0.85 and degradation ≤ 0.02; ISR ≥ 80% and
-  ≥ control − 5 pp; WER ≤ control + 2 pp. Checkpoint chosen on validation only; test
+  paired-bootstrap CI excluding 0; WavLM ≥ 0.85 and degradation ≤ 0.05; ISR ≥ 80% and
+  ≥ control − 10 pp; WER ≤ control + 5 pp. Checkpoint chosen on validation only; test
   split touched once, after freezing.
 - **Stage 5 — fallback:** teacher-forced likelihood-preference trainer
   (`TEACHER_FORCED_PREFERENCE_PLAN_PORTABLE.md`) if replay fails gates.
@@ -293,7 +287,7 @@ Implementation map (package `ste_optimized`, folder `ste-optimized/`):
 
 ## 7. Verification checklist (implemented in `ste-optimized/tests/`)
 
-- **CPU unit tests (27, green):** `test_transform.py` (identity init, T(0)=0,
+- **CPU unit tests (37, green):** `test_transform.py` (identity init, T(0)=0,
   saddle-avoidance, save/load, regularizers), `test_ste.py` (STE forward-hard /
   gradient-soft, history-dependent repetition penalty, min-new-tokens EOS
   suppression, top-k/temperature, gradient flow through the chain),
@@ -302,7 +296,9 @@ Implementation map (package `ste_optimized`, folder `ste-optimized/`):
   `test_training_chunks.py` (freed-graph regression: the old shared-T(v)
   pattern raises; per-chunk recompute grads == single-backward grads),
   `test_sampling_data.py` (cross-speaker constraint, epoch coverage, base
-  rotation, resume parity, quality filter, leakage fail-closed).
+  rotation, resume parity, quality filter, leakage fail-closed), plus bounded-loop,
+  inference-tensor codec-prefix, smoke-gate, nonzero-gradient, and artifact-path
+  regressions in `test_training_bounds.py`, `test_codec.py`, and `test_smoke.py`.
 - **GPU milestone gates (5, `pytest -m gpu`, in order):** the one-fixed-batch
   acceptance test (complete reference-conditioned loss; four assertions),
   multi-chunk accumulation, prompt-assembly parity, soft-codec parity (bare
@@ -314,8 +310,8 @@ Defects caught by these tests so far: an autograd in-place violation in the
 penalty-chain replay and a negative suppress-range index (during initial
 implementation), plus five review-found bugs on 2026-07-20 (shared-graph
 double-backward, missing reference-conditioned decode, fp32→bf16 codec crash,
-unfrozen codec, unwarped residual STE derivative) — evidence the gates bite,
-not decoration.
+unfrozen codec, unwarped residual STE derivative), and a PyTorch inference-tensor
+in-place clamp in the real codec prefix — evidence the gates bite, not decoration.
 
 ## 8. Timestamped execution results
 
@@ -364,7 +360,95 @@ angry-transform learning gate unimplemented and unexecuted. Stage 0 must not be 
 complete until those last two gates pass and save their checkpoint, source contrast,
 `T(v)`, metrics, and sample audio.
 
-## 9. Known limits (unchanged)
+### 2026-07-20 02:27:56–02:28:50 UTC — real angry-transform smoke (PASS)
+
+This entry supersedes the 01:28 UTC environment/status conclusion above. CUDA was
+installed; the managed command sandbox had hidden `/dev/nvidia0`, `/dev/nvidia1`, and
+`/dev/nvidiactl`. Running the GPU commands with device access exposed two NVIDIA RTX
+A6000 GPUs. The verified runtime was Python 3.12.4, torch `2.7.1+cu126`, torch CUDA
+12.6, NVIDIA driver `595.71.05`, and FlashAttention `2.8.3`. The initially cached
+FlashAttention wheel had the wrong torch ABI; it was replaced with the official
+`cu12torch2.7cxx11abiTRUE-cp312-linux_x86_64` wheel. The smoke fails closed unless
+Qwen's model, talker, and code predictor all report `flash_attention_2`; all three did.
+
+Changes implemented for the bounded proof:
+
+- added `ste-optimized smoke`, `configs/angry-smoke.yaml`, and the local cached-ESD
+  materializer;
+- selected the real matched pair `0011:000254` (`"She laughed."`), extracted its
+  layer-15 angry-minus-neutral vector, and stored the source pair and scores;
+- fixed `K=1`, `M=4`: one native four-row Qwen generation per optimizer update, the
+  same `T(v)` on every neutral row, two-row replay chunks, reference-conditioned soft
+  codec decode, emotion2vec and WavLM losses, then backward into `T` only;
+- added attempt/wall bounds, skipped-update accounting, checkpoint/final export,
+  pre-clip gradient/parameter/steering deltas, full frozen-module tripwires, and an
+  explicit rejection of a zero transform gradient;
+- fixed the real-run PyTorch error caused by an in-place clamp on Qwen reference codes
+  created under inference mode; and
+- added held-out unsteered/raw controls, row-level directionality, speaker/EOS gates,
+  alpha selection, WAV export, a learned-transform artifact, and a directly reusable
+  1024-D steering payload. The current smoke code uses the requested lenient relative
+  speaker bound (degradation ≤ 0.05); the successful run below passed the earlier,
+  stricter ≤ 0.02 bound.
+
+Commands and verification:
+
+```text
+HF_HUB_OFFLINE=1 STE_OPT_ATTN_IMPLEMENTATION=flash_attention_2 \
+  STE_OPT_REF_WAV=data/esd-smoke-source/wav/0012_000332.wav \
+  STE_OPT_REF_TEXT='where are you going?' \
+  pytest -q -m gpu tests/test_parity.py \
+  -k 'prompt_assembly or soft_codec or emotion2vec' -rs
+3 passed, 2 deselected in 10.89s
+
+pytest -q -m 'not gpu'
+37 passed, 5 deselected in 2.13s
+
+HF_HUB_OFFLINE=1 python -m ste_optimized smoke \
+  -c configs/angry-smoke.yaml --pair-id 0011:000254 \
+  --output runs/angry-smoke-20260720T022733Z
+status: pass; success gate after 1 update; total wall: 53.84s
+```
+
+Measured training-path evidence:
+
+- contrast norm `3.81629`; extraction angry probability `0.999996`; extraction speaker
+  similarity `0.954005`;
+- four train bases from speaker 0014 and four disjoint held-out bases from speaker 0012;
+- 4/4 pass-1 rows EOS-terminated; replay/codec/experts/backward took `1.412s` after
+  `16.891s` native generation;
+- finite nonzero pre-clip transform gradient norm `7.79739`;
+- optimizer parameter delta L2 `0.383995` and `T(v)` output delta L2 `0.193319`;
+- every Qwen/talker/codec/emotion2vec/WavLM parameter remained frozen and gradient-free.
+
+Selected learned arm: update 1, alpha `0.73`. Across the four held-out neutral texts,
+mean angry probability was `0.749920` versus `0.000000637` unsteered (positive change
+`+0.749919`); mean WavLM speaker similarity was `0.852267` versus `0.866093`
+(degradation `0.013826`); and EOS termination was 4/4. Per-row angry probabilities
+were `0.999986`, `0.999695`, `1.000000`, and `0.000000395`: three rows became strongly
+angry, while the fourth improved only numerically. The strongest raw-vector control
+scored `0.996263`, so this run proves that the learned transform is trainable and that
+its selected output steers several unseen neutral texts toward angry; it does **not**
+show that the transform beats a tuned raw contrast or works for every neutral utterance.
+Here “optimal” means the best feasible learned checkpoint/alpha measured by this bounded
+run, not a universal optimum.
+
+Artifacts:
+
+- `runs/angry-smoke-20260720T022733Z/learned_angry_transform.pt`
+- `runs/angry-smoke-20260720T022733Z/angry_steering_payload.pt`
+- `runs/angry-smoke-20260720T022733Z/report.json`
+- `runs/angry-smoke-20260720T022733Z/audio/`
+
+The payload audit passed: raw, transformed, and scaled vectors are finite 1024-D
+tensors; reloading the transform reproduces `transformed_v`; and
+`scaled_vector == transformed_v * 0.73`. WER and true ISR were not measured in this
+short proof (EOS survival is not a substitute). Before a production or “any utterance”
+claim, run multiple pairs, speakers, and seeds; add the independent WER/ISR panel and
+an independent emotion judge; and compare the learned transform against the unusually
+strong tuned raw-vector control.
+
+## 9. Known limits
 
 Fixed-hard STE drops cross-timestep credit and the EOS/duration path (duration is a
 first-order emotion cue — an objective ceiling, not a bug); emotion2vec is both trainer

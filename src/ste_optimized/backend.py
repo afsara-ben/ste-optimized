@@ -72,6 +72,31 @@ class QwenTTSBackend:
         self.load_seconds = time.perf_counter() - t0
         self.talker = self.tts.model.talker
         self.model_config = self.tts.model.config
+        self.attention_runtime = {
+            "requested": cfg.attn_implementation,
+            "model": getattr(self.model_config, "_attn_implementation", None),
+            "talker": getattr(self.talker.config, "_attn_implementation", None),
+            "code_predictor": getattr(
+                getattr(self.talker, "code_predictor", None), "config", None
+            ),
+        }
+        code_predictor_cfg = self.attention_runtime["code_predictor"]
+        self.attention_runtime["code_predictor"] = getattr(
+            code_predictor_cfg, "_attn_implementation", None
+        )
+        if cfg.attn_implementation == "flash_attention_2":
+            import flash_attn
+
+            self.attention_runtime["flash_attn_version"] = flash_attn.__version__
+            configured = (
+                self.attention_runtime["model"],
+                self.attention_runtime["talker"],
+            )
+            if any(value != "flash_attention_2" for value in configured):
+                raise RuntimeError(
+                    "FlashAttention was requested but Qwen did not retain "
+                    f"flash_attention_2: {self.attention_runtime}"
+                )
         self._prompt_cache: dict[tuple[str, str], PromptEntry] = {}
         for p in self.tts.model.parameters():
             p.requires_grad_(False)

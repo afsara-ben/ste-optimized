@@ -1,0 +1,640 @@
+{
+  "schema": "ste-optimized/angry-smoke-report/v1",
+  "status": "pass",
+  "started_at_utc": "2026-07-20T02:27:56.532795+00:00",
+  "finished_at_utc": "2026-07-20T02:28:50.376149+00:00",
+  "pair": {
+    "pair_id": "0011:000254",
+    "speaker": "0011",
+    "split": "train",
+    "text": "She laughed.",
+    "neutral_audio": "/data/home/hys4qm/ste-optimized/data/esd-smoke-source/wav/0011_000254.wav",
+    "emotional_audio": "/data/home/hys4qm/ste-optimized/data/esd-smoke-source/wav/0011_000604.wav"
+  },
+  "contrast": {
+    "source": "direct-extraction",
+    "artifact": "/data/home/hys4qm/ste-optimized/runs/angry-smoke-20260720T022733Z/selected_contrast.pt",
+    "norm": 3.8162903785705566,
+    "emotion_prob": 0.9999962449073792,
+    "speaker_sim": 0.9540054798126221
+  },
+  "cuda": {
+    "torch_cuda_version": "12.6",
+    "device": "cuda:0",
+    "device_name": "NVIDIA RTX A6000",
+    "device_count": 2,
+    "total_memory_bytes": 50897289216
+  },
+  "attention_runtime": {
+    "requested": "flash_attention_2",
+    "model": "flash_attention_2",
+    "talker": "flash_attention_2",
+    "code_predictor": "flash_attention_2",
+    "flash_attn_version": "2.8.3"
+  },
+  "model_load_seconds": 1.6903250929899514,
+  "train_base_ids": [
+    "0014:000098",
+    "0014:000202",
+    "0014:000212",
+    "0014:000278"
+  ],
+  "validation_base_ids": [
+    "0012:000047",
+    "0012:000236",
+    "0012:000296",
+    "0012:000332"
+  ],
+  "batch_contract": {
+    "contrasts_per_update": 1,
+    "bases_per_contrast": 4,
+    "native_qwen_calls_per_update": 1,
+    "sequential_qwen_generation": false,
+    "validation_rows_per_arm": 4
+  },
+  "controls": {
+    "unsteered": {
+      "arm": "unsteered",
+      "alpha": 0.0,
+      "seed": 2037801686,
+      "rows": [
+        {
+          "base_id": "0012:000047",
+          "speaker": "0012",
+          "target_text": "please excuse me.",
+          "terminated": true,
+          "frames": 13,
+          "audio": "/data/home/hys4qm/ste-optimized/runs/angry-smoke-20260720T022733Z/audio/unsteered/00-0012_000047.wav",
+          "angry_prob": 3.653821911697719e-09,
+          "speaker_sim": 0.7699310779571533
+        },
+        {
+          "base_id": "0012:000236",
+          "speaker": "0012",
+          "target_text": "How rash you are!",
+          "terminated": true,
+          "frames": 14,
+          "audio": "/data/home/hys4qm/ste-optimized/runs/angry-smoke-20260720T022733Z/audio/unsteered/01-0012_000236.wav",
+          "angry_prob": 2.537697127991123e-06,
+          "speaker_sim": 0.8415308594703674
+        },
+        {
+          "base_id": "0012:000296",
+          "speaker": "0012",
+          "target_text": "You woke me up!",
+          "terminated": true,
+          "frames": 21,
+          "audio": "/data/home/hys4qm/ste-optimized/runs/angry-smoke-20260720T022733Z/audio/unsteered/02-0012_000296.wav",
+          "angry_prob": 5.8658815582646184e-09,
+          "speaker_sim": 0.9361261129379272
+        },
+        {
+          "base_id": "0012:000332",
+          "speaker": "0012",
+          "target_text": "where are you going?",
+          "terminated": true,
+          "frames": 14,
+          "audio": "/data/home/hys4qm/ste-optimized/runs/angry-smoke-20260720T022733Z/audio/unsteered/03-0012_000332.wav",
+          "angry_prob": 5.4470107081500824e-14,
+          "speaker_sim": 0.9167826175689697
+        }
+      ],
+      "mean_angry_prob": 6.368042214827981e-07,
+      "mean_speaker_sim": 0.8660926669836044,
+      "termination_rate": 1.0,
+      "generation_wall_seconds": 2.7733528870157897,
+      "native_qwen_batch_size": 4
+    },
+    "raw_alpha_sweep": [
+      {
+        "arm": "raw_alpha_0p73",
+        "alpha": 0.73,
+        "seed": 2037801686,
+        "rows": [
+          {
+            "base_id": "0012:000047",
+            "speaker": "0012",
+            "target_text": "please excuse me.",
+            "terminated": true,
+            "frames": 19,
+            "audio": "/data/home/hys4qm/ste-optimized/runs/angry-smoke-20260720T022733Z/audio/raw_alpha_0p73/00-0012_000047.wav",
+            "angry_prob": 0.9998832941055298,
+            "speaker_sim": 0.8740209341049194
+          },
+          {
+            "base_id": "0012:000236",
+            "speaker": "0012",
+            "target_text": "How rash you are!",
+            "terminated": true,
+            "frames": 13,
+            "audio": "/data/home/hys4qm/ste-optimized/runs/angry-smoke-20260720T022733Z/audio/raw_alpha_0p73/01-0012_000236.wav",
+            "angry_prob": 0.9915585517883301,
+            "speaker_sim": 0.8461923599243164
+          },
+          {
+            "base_id": "0012:000296",
+            "speaker": "0012",
+            "target_text": "You woke me up!",
+            "terminated": true,
+            "frames": 21,
+            "audio": "/data/home/hys4qm/ste-optimized/runs/angry-smoke-20260720T022733Z/audio/raw_alpha_0p73/02-0012_000296.wav",
+            "angry_prob": 0.9936867356300354,
+            "speaker_sim": 0.8460782766342163
+          },
+          {
+            "base_id": "0012:000332",
+            "speaker": "0012",
+            "target_text": "where are you going?",
+            "terminated": true,
+            "frames": 12,
+            "audio": "/data/home/hys4qm/ste-optimized/runs/angry-smoke-20260720T022733Z/audio/raw_alpha_0p73/03-0012_000332.wav",
+            "angry_prob": 0.999924898147583,
+            "speaker_sim": 0.8766500353813171
+          }
+        ],
+        "mean_angry_prob": 0.9962633699178696,
+        "mean_speaker_sim": 0.8607354015111923,
+        "termination_rate": 1.0,
+        "generation_wall_seconds": 2.8541630399413407,
+        "native_qwen_batch_size": 4
+      },
+      {
+        "arm": "raw_alpha_0p75",
+        "alpha": 0.75,
+        "seed": 2037801686,
+        "rows": [
+          {
+            "base_id": "0012:000047",
+            "speaker": "0012",
+            "target_text": "please excuse me.",
+            "terminated": true,
+            "frames": 16,
+            "audio": "/data/home/hys4qm/ste-optimized/runs/angry-smoke-20260720T022733Z/audio/raw_alpha_0p75/00-0012_000047.wav",
+            "angry_prob": 0.9999911189079285,
+            "speaker_sim": 0.8183608055114746
+          },
+          {
+            "base_id": "0012:000236",
+            "speaker": "0012",
+            "target_text": "How rash you are!",
+            "terminated": true,
+            "frames": 16,
+            "audio": "/data/home/hys4qm/ste-optimized/runs/angry-smoke-20260720T022733Z/audio/raw_alpha_0p75/01-0012_000236.wav",
+            "angry_prob": 0.0004574928607326001,
+            "speaker_sim": 0.842349648475647
+          },
+          {
+            "base_id": "0012:000296",
+            "speaker": "0012",
+            "target_text": "You woke me up!",
+            "terminated": true,
+            "frames": 16,
+            "audio": "/data/home/hys4qm/ste-optimized/runs/angry-smoke-20260720T022733Z/audio/raw_alpha_0p75/02-0012_000296.wav",
+            "angry_prob": 0.9982748031616211,
+            "speaker_sim": 0.7189607620239258
+          },
+          {
+            "base_id": "0012:000332",
+            "speaker": "0012",
+            "target_text": "where are you going?",
+            "terminated": true,
+            "frames": 14,
+            "audio": "/data/home/hys4qm/ste-optimized/runs/angry-smoke-20260720T022733Z/audio/raw_alpha_0p75/03-0012_000332.wav",
+            "angry_prob": 3.468638487547082e-09,
+            "speaker_sim": 0.8665046095848083
+          }
+        ],
+        "mean_angry_prob": 0.49968085459973016,
+        "mean_speaker_sim": 0.8115439563989639,
+        "termination_rate": 1.0,
+        "generation_wall_seconds": 2.1866253982298076,
+        "native_qwen_batch_size": 4
+      },
+      {
+        "arm": "raw_alpha_1",
+        "alpha": 1.0,
+        "seed": 2037801686,
+        "rows": [
+          {
+            "base_id": "0012:000047",
+            "speaker": "0012",
+            "target_text": "please excuse me.",
+            "terminated": true,
+            "frames": 21,
+            "audio": "/data/home/hys4qm/ste-optimized/runs/angry-smoke-20260720T022733Z/audio/raw_alpha_1/00-0012_000047.wav",
+            "angry_prob": 0.2818411588668823,
+            "speaker_sim": 0.8071902990341187
+          },
+          {
+            "base_id": "0012:000236",
+            "speaker": "0012",
+            "target_text": "How rash you are!",
+            "terminated": true,
+            "frames": 15,
+            "audio": "/data/home/hys4qm/ste-optimized/runs/angry-smoke-20260720T022733Z/audio/raw_alpha_1/01-0012_000236.wav",
+            "angry_prob": 0.9998310208320618,
+            "speaker_sim": 0.8526588678359985
+          },
+          {
+            "base_id": "0012:000296",
+            "speaker": "0012",
+            "target_text": "You woke me up!",
+            "terminated": true,
+            "frames": 16,
+            "audio": "/data/home/hys4qm/ste-optimized/runs/angry-smoke-20260720T022733Z/audio/raw_alpha_1/02-0012_000296.wav",
+            "angry_prob": 0.9999997615814209,
+            "speaker_sim": 0.8384758830070496
+          },
+          {
+            "base_id": "0012:000332",
+            "speaker": "0012",
+            "target_text": "where are you going?",
+            "terminated": true,
+            "frames": 14,
+            "audio": "/data/home/hys4qm/ste-optimized/runs/angry-smoke-20260720T022733Z/audio/raw_alpha_1/03-0012_000332.wav",
+            "angry_prob": 0.9362659454345703,
+            "speaker_sim": 0.7973735332489014
+          }
+        ],
+        "mean_angry_prob": 0.8044844716787338,
+        "mean_speaker_sim": 0.823924645781517,
+        "termination_rate": 1.0,
+        "generation_wall_seconds": 2.8250562390312552,
+        "native_qwen_batch_size": 4
+      }
+    ]
+  },
+  "control_max_mean_angry_prob": 0.9962633699178696,
+  "checkpoint_history": [
+    {
+      "update": 1,
+      "transform_delta_l2": 0.1933186948299408,
+      "transformed_norm": 3.8227696418762207,
+      "arms": [
+        {
+          "arm": "learned_update_001_alpha_0p73",
+          "alpha": 0.73,
+          "seed": 2037801686,
+          "rows": [
+            {
+              "base_id": "0012:000047",
+              "speaker": "0012",
+              "target_text": "please excuse me.",
+              "terminated": true,
+              "frames": 31,
+              "audio": "/data/home/hys4qm/ste-optimized/runs/angry-smoke-20260720T022733Z/audio/learned_update_001_alpha_0p73/00-0012_000047.wav",
+              "angry_prob": 0.9999855160713196,
+              "speaker_sim": 0.93137526512146
+            },
+            {
+              "base_id": "0012:000236",
+              "speaker": "0012",
+              "target_text": "How rash you are!",
+              "terminated": true,
+              "frames": 14,
+              "audio": "/data/home/hys4qm/ste-optimized/runs/angry-smoke-20260720T022733Z/audio/learned_update_001_alpha_0p73/01-0012_000236.wav",
+              "angry_prob": 0.9996949434280396,
+              "speaker_sim": 0.8508909344673157
+            },
+            {
+              "base_id": "0012:000296",
+              "speaker": "0012",
+              "target_text": "You woke me up!",
+              "terminated": true,
+              "frames": 16,
+              "audio": "/data/home/hys4qm/ste-optimized/runs/angry-smoke-20260720T022733Z/audio/learned_update_001_alpha_0p73/02-0012_000296.wav",
+              "angry_prob": 0.9999995231628418,
+              "speaker_sim": 0.7745763063430786
+            },
+            {
+              "base_id": "0012:000332",
+              "speaker": "0012",
+              "target_text": "where are you going?",
+              "terminated": true,
+              "frames": 13,
+              "audio": "/data/home/hys4qm/ste-optimized/runs/angry-smoke-20260720T022733Z/audio/learned_update_001_alpha_0p73/03-0012_000332.wav",
+              "angry_prob": 3.948320568269992e-07,
+              "speaker_sim": 0.8522258996963501
+            }
+          ],
+          "mean_angry_prob": 0.7499200943735644,
+          "mean_speaker_sim": 0.8522671014070511,
+          "termination_rate": 1.0,
+          "generation_wall_seconds": 4.153298243414611,
+          "native_qwen_batch_size": 4,
+          "constraints": {
+            "termination": true,
+            "speaker_absolute": true,
+            "speaker_degradation": true,
+            "row_directionality": true,
+            "speaker_degradation_vs_unsteered": 0.013825565576553345,
+            "rows_angrier_than_unsteered": 4,
+            "rows_evaluated": 4,
+            "pass": true
+          }
+        },
+        {
+          "arm": "learned_update_001_alpha_0p75",
+          "alpha": 0.75,
+          "seed": 2037801686,
+          "rows": [
+            {
+              "base_id": "0012:000047",
+              "speaker": "0012",
+              "target_text": "please excuse me.",
+              "terminated": true,
+              "frames": 16,
+              "audio": "/data/home/hys4qm/ste-optimized/runs/angry-smoke-20260720T022733Z/audio/learned_update_001_alpha_0p75/00-0012_000047.wav",
+              "angry_prob": 1.0,
+              "speaker_sim": 0.8314393758773804
+            },
+            {
+              "base_id": "0012:000236",
+              "speaker": "0012",
+              "target_text": "How rash you are!",
+              "terminated": true,
+              "frames": 17,
+              "audio": "/data/home/hys4qm/ste-optimized/runs/angry-smoke-20260720T022733Z/audio/learned_update_001_alpha_0p75/01-0012_000236.wav",
+              "angry_prob": 0.13561895489692688,
+              "speaker_sim": 0.751675009727478
+            },
+            {
+              "base_id": "0012:000296",
+              "speaker": "0012",
+              "target_text": "You woke me up!",
+              "terminated": true,
+              "frames": 17,
+              "audio": "/data/home/hys4qm/ste-optimized/runs/angry-smoke-20260720T022733Z/audio/learned_update_001_alpha_0p75/02-0012_000296.wav",
+              "angry_prob": 0.9996995329856873,
+              "speaker_sim": 0.838252604007721
+            },
+            {
+              "base_id": "0012:000332",
+              "speaker": "0012",
+              "target_text": "where are you going?",
+              "terminated": true,
+              "frames": 17,
+              "audio": "/data/home/hys4qm/ste-optimized/runs/angry-smoke-20260720T022733Z/audio/learned_update_001_alpha_0p75/03-0012_000332.wav",
+              "angry_prob": 2.205424287637925e-08,
+              "speaker_sim": 0.8420311212539673
+            }
+          ],
+          "mean_angry_prob": 0.5338296274842143,
+          "mean_speaker_sim": 0.8158495277166367,
+          "termination_rate": 1.0,
+          "generation_wall_seconds": 2.2997409873642027,
+          "native_qwen_batch_size": 4,
+          "constraints": {
+            "termination": true,
+            "speaker_absolute": false,
+            "speaker_degradation": false,
+            "row_directionality": true,
+            "speaker_degradation_vs_unsteered": 0.05024313926696777,
+            "rows_angrier_than_unsteered": 4,
+            "rows_evaluated": 4,
+            "pass": false
+          }
+        },
+        {
+          "arm": "learned_update_001_alpha_1",
+          "alpha": 1.0,
+          "seed": 2037801686,
+          "rows": [
+            {
+              "base_id": "0012:000047",
+              "speaker": "0012",
+              "target_text": "please excuse me.",
+              "terminated": true,
+              "frames": 19,
+              "audio": "/data/home/hys4qm/ste-optimized/runs/angry-smoke-20260720T022733Z/audio/learned_update_001_alpha_1/00-0012_000047.wav",
+              "angry_prob": 1.0,
+              "speaker_sim": 0.7068859338760376
+            },
+            {
+              "base_id": "0012:000236",
+              "speaker": "0012",
+              "target_text": "How rash you are!",
+              "terminated": true,
+              "frames": 20,
+              "audio": "/data/home/hys4qm/ste-optimized/runs/angry-smoke-20260720T022733Z/audio/learned_update_001_alpha_1/01-0012_000236.wav",
+              "angry_prob": 0.8980794548988342,
+              "speaker_sim": 0.7411462664604187
+            },
+            {
+              "base_id": "0012:000296",
+              "speaker": "0012",
+              "target_text": "You woke me up!",
+              "terminated": true,
+              "frames": 37,
+              "audio": "/data/home/hys4qm/ste-optimized/runs/angry-smoke-20260720T022733Z/audio/learned_update_001_alpha_1/02-0012_000296.wav",
+              "angry_prob": 0.7398844361305237,
+              "speaker_sim": 0.8029974699020386
+            },
+            {
+              "base_id": "0012:000332",
+              "speaker": "0012",
+              "target_text": "where are you going?",
+              "terminated": true,
+              "frames": 20,
+              "audio": "/data/home/hys4qm/ste-optimized/runs/angry-smoke-20260720T022733Z/audio/learned_update_001_alpha_1/03-0012_000332.wav",
+              "angry_prob": 0.16276708245277405,
+              "speaker_sim": 0.822190523147583
+            }
+          ],
+          "mean_angry_prob": 0.700182743370533,
+          "mean_speaker_sim": 0.7683050483465195,
+          "termination_rate": 1.0,
+          "generation_wall_seconds": 4.918232514057308,
+          "native_qwen_batch_size": 4,
+          "constraints": {
+            "termination": true,
+            "speaker_absolute": false,
+            "speaker_degradation": false,
+            "row_directionality": true,
+            "speaker_degradation_vs_unsteered": 0.09778761863708496,
+            "rows_angrier_than_unsteered": 4,
+            "rows_evaluated": 4,
+            "pass": false
+          }
+        }
+      ],
+      "best_feasible": {
+        "arm": "learned_update_001_alpha_0p73",
+        "alpha": 0.73,
+        "seed": 2037801686,
+        "rows": [
+          {
+            "base_id": "0012:000047",
+            "speaker": "0012",
+            "target_text": "please excuse me.",
+            "terminated": true,
+            "frames": 31,
+            "audio": "/data/home/hys4qm/ste-optimized/runs/angry-smoke-20260720T022733Z/audio/learned_update_001_alpha_0p73/00-0012_000047.wav",
+            "angry_prob": 0.9999855160713196,
+            "speaker_sim": 0.93137526512146
+          },
+          {
+            "base_id": "0012:000236",
+            "speaker": "0012",
+            "target_text": "How rash you are!",
+            "terminated": true,
+            "frames": 14,
+            "audio": "/data/home/hys4qm/ste-optimized/runs/angry-smoke-20260720T022733Z/audio/learned_update_001_alpha_0p73/01-0012_000236.wav",
+            "angry_prob": 0.9996949434280396,
+            "speaker_sim": 0.8508909344673157
+          },
+          {
+            "base_id": "0012:000296",
+            "speaker": "0012",
+            "target_text": "You woke me up!",
+            "terminated": true,
+            "frames": 16,
+            "audio": "/data/home/hys4qm/ste-optimized/runs/angry-smoke-20260720T022733Z/audio/learned_update_001_alpha_0p73/02-0012_000296.wav",
+            "angry_prob": 0.9999995231628418,
+            "speaker_sim": 0.7745763063430786
+          },
+          {
+            "base_id": "0012:000332",
+            "speaker": "0012",
+            "target_text": "where are you going?",
+            "terminated": true,
+            "frames": 13,
+            "audio": "/data/home/hys4qm/ste-optimized/runs/angry-smoke-20260720T022733Z/audio/learned_update_001_alpha_0p73/03-0012_000332.wav",
+            "angry_prob": 3.948320568269992e-07,
+            "speaker_sim": 0.8522258996963501
+          }
+        ],
+        "mean_angry_prob": 0.7499200943735644,
+        "mean_speaker_sim": 0.8522671014070511,
+        "termination_rate": 1.0,
+        "generation_wall_seconds": 4.153298243414611,
+        "native_qwen_batch_size": 4,
+        "constraints": {
+          "termination": true,
+          "speaker_absolute": true,
+          "speaker_degradation": true,
+          "row_directionality": true,
+          "speaker_degradation_vs_unsteered": 0.013825565576553345,
+          "rows_angrier_than_unsteered": 4,
+          "rows_evaluated": 4,
+          "pass": true
+        }
+      }
+    }
+  ],
+  "selected": {
+    "arm": "learned_update_001_alpha_0p73",
+    "alpha": 0.73,
+    "seed": 2037801686,
+    "rows": [
+      {
+        "base_id": "0012:000047",
+        "speaker": "0012",
+        "target_text": "please excuse me.",
+        "terminated": true,
+        "frames": 31,
+        "audio": "/data/home/hys4qm/ste-optimized/runs/angry-smoke-20260720T022733Z/audio/learned_update_001_alpha_0p73/00-0012_000047.wav",
+        "angry_prob": 0.9999855160713196,
+        "speaker_sim": 0.93137526512146
+      },
+      {
+        "base_id": "0012:000236",
+        "speaker": "0012",
+        "target_text": "How rash you are!",
+        "terminated": true,
+        "frames": 14,
+        "audio": "/data/home/hys4qm/ste-optimized/runs/angry-smoke-20260720T022733Z/audio/learned_update_001_alpha_0p73/01-0012_000236.wav",
+        "angry_prob": 0.9996949434280396,
+        "speaker_sim": 0.8508909344673157
+      },
+      {
+        "base_id": "0012:000296",
+        "speaker": "0012",
+        "target_text": "You woke me up!",
+        "terminated": true,
+        "frames": 16,
+        "audio": "/data/home/hys4qm/ste-optimized/runs/angry-smoke-20260720T022733Z/audio/learned_update_001_alpha_0p73/02-0012_000296.wav",
+        "angry_prob": 0.9999995231628418,
+        "speaker_sim": 0.7745763063430786
+      },
+      {
+        "base_id": "0012:000332",
+        "speaker": "0012",
+        "target_text": "where are you going?",
+        "terminated": true,
+        "frames": 13,
+        "audio": "/data/home/hys4qm/ste-optimized/runs/angry-smoke-20260720T022733Z/audio/learned_update_001_alpha_0p73/03-0012_000332.wav",
+        "angry_prob": 3.948320568269992e-07,
+        "speaker_sim": 0.8522258996963501
+      }
+    ],
+    "mean_angry_prob": 0.7499200943735644,
+    "mean_speaker_sim": 0.8522671014070511,
+    "termination_rate": 1.0,
+    "generation_wall_seconds": 4.153298243414611,
+    "native_qwen_batch_size": 4,
+    "constraints": {
+      "termination": true,
+      "speaker_absolute": true,
+      "speaker_degradation": true,
+      "row_directionality": true,
+      "speaker_degradation_vs_unsteered": 0.013825565576553345,
+      "rows_angrier_than_unsteered": 4,
+      "rows_evaluated": 4,
+      "pass": true
+    },
+    "update": 1,
+    "gain_vs_unsteered": 0.749919457569343,
+    "gain_vs_best_raw_control": -0.24634327554430513,
+    "beats_best_raw_control": false
+  },
+  "training": {
+    "requested_max_updates": 5,
+    "completed_updates": 1,
+    "attempts": 1,
+    "stop_reason": "success_gate",
+    "wall_seconds": 30.55920970113948,
+    "records": [
+      {
+        "event": "update",
+        "update": 1,
+        "epoch": 0,
+        "contrasts": [
+          "0011:000254"
+        ],
+        "rows": 4,
+        "survivors": 4,
+        "survival": 1.0,
+        "emotion_loss": 10.710822563618422,
+        "speaker_loss": 0.2636169493198395,
+        "emotion_prob": 0.22636541039858926,
+        "speaker_sim": 0.7363830432295799,
+        "grad_norm": 7.797388076782227,
+        "grad_norm_preclip": 7.797388076782227,
+        "parameter_delta_l2": 0.38399470985957296,
+        "steering_delta_l2": 0.1933186650276184,
+        "lr": 0.003,
+        "t_prompt_prep": 0.216,
+        "t_pass1_generate": 16.891,
+        "t_pass2_replay_codec_experts_backward": 1.412,
+        "t_optimizer": 0.033
+      }
+    ]
+  },
+  "constraints": {
+    "minimum_termination_rate": 0.8,
+    "minimum_mean_speaker_similarity": 0.85,
+    "maximum_speaker_degradation_vs_unsteered": 0.02,
+    "minimum_angry_gain_over_unsteered": 0.01,
+    "minimum_mean_angry_probability": 0.5,
+    "minimum_rows_angrier_than_unsteered": 3
+  },
+  "total_wall_seconds": 53.84141457406804,
+  "resolved_config": "/data/home/hys4qm/ste-optimized/runs/angry-smoke-20260720T022733Z/resolved_config.yaml",
+  "claim_scope": "empirical optimum over this run's measured checkpoints and alpha grid on four held-out validation bases",
+  "artifacts": {
+    "transform": "/data/home/hys4qm/ste-optimized/runs/angry-smoke-20260720T022733Z/learned_angry_transform.pt",
+    "steering_payload": "/data/home/hys4qm/ste-optimized/runs/angry-smoke-20260720T022733Z/angry_steering_payload.pt",
+    "audio_dir": "/data/home/hys4qm/ste-optimized/runs/angry-smoke-20260720T022733Z/audio"
+  }
+}

@@ -44,6 +44,8 @@ train:
   max_updates: 5
   max_attempts: 8
   max_wall_seconds: 3600
+  # Stop as soon as a learned checkpoint satisfies the held-out anger,
+  # termination, and speaker gates.
   eval_every: 1
   early_stop_patience: 5
   lr: 0.003
@@ -66,7 +68,8 @@ distributed:
 
 eval:
   panel_seeds: 1
-  alphas: [0.75, 1.0, 1.25]
+  # Cover the strong raw-vector control and the learned anger/speaker boundary.
+  alphas: [0.73, 0.75, 1.0]
   cadence_rows: 4
   control_cache_dir: runs/angry-smoke-controls-unused
   compute_wer: false

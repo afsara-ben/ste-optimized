@@ -29,6 +29,18 @@ CHUNK_FRAMES = 300
 LEFT_CONTEXT = 25
 
 
+def _reference_one_hot(
+    ref_codes: torch.Tensor, device: torch.device, vocab_size: int,
+    dtype: torch.dtype,
+) -> torch.Tensor:
+    """Encode a constant reference prefix without mutating inference tensors."""
+    import torch.nn.functional as F
+
+    return F.one_hot(
+        ref_codes.to(device).long().clamp(0, vocab_size - 1), vocab_size
+    ).to(dtype)
+
+
 def _codebook_table(vq_layer) -> torch.Tensor:
     cb = vq_layer._codebook
     return cb.embedding_sum / cb.cluster_usage.clamp(min=cb.epsilon)[:, None]
@@ -101,8 +113,12 @@ def decode_soft(
     if ref_codes is not None:
         V = x.shape[-1]
         ref_frames = int(ref_codes.shape[0])
-        ref_oh = F.one_hot(
-            ref_codes.to(x.device).long().clamp_(0, V - 1), V).to(dtype)
+        # ``ref_codes`` can originate from Qwen's inference-mode prompt
+        # construction.  PyTorch forbids in-place updates to such tensors once
+        # we are back in the grad-enabled replay pass, even after a dtype/device
+        # conversion that happens to be a no-op.  Keep this out of place so the
+        # constant reference prefix is safe in both inference and autograd.
+        ref_oh = _reference_one_hot(ref_codes, x.device, V, dtype)
         ref_x = ref_oh.permute(1, 0, 2).unsqueeze(0)      # [1, 16, T_ref, V]
         x = torch.cat([ref_x.expand(x.shape[0], -1, -1, -1), x], dim=2)
     total_upsample = int(decoder.total_upsample)

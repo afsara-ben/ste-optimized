@@ -11,7 +11,10 @@ def test_one_hot_ste_forward_is_hard_gradient_is_soft():
     y = one_hot_ste(codes, probs)
     hard = torch.nn.functional.one_hot(codes, 10).float()
     assert torch.allclose(y.detach(), hard)          # forward value = hard
-    y.sum().backward()
+    # A plain sum is identically one per row, so its softmax derivative is
+    # correctly zero.  Use a non-constant downstream value to test the STE.
+    values = torch.arange(10, dtype=y.dtype).expand_as(y)
+    (y * values).sum().backward()
     assert logits.grad is not None and logits.grad.abs().sum() > 0
 
 

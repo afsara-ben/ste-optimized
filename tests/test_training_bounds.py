@@ -152,7 +152,7 @@ def test_gradient_contract_checks_every_frozen_parameter(violation):
     trainer = object.__new__(Trainer)
     trainer.transform = nn.Linear(1, 1)
     for parameter in trainer.transform.parameters():
-        parameter.grad = torch.zeros_like(parameter)
+        parameter.grad = torch.ones_like(parameter)
 
     talker = _TwoParameterModule()
     if violation == "requires_grad":
@@ -173,4 +173,25 @@ def test_gradient_contract_checks_every_frozen_parameter(violation):
     )
 
     with pytest.raises(RuntimeError, match=r"talker.*parameter 1"):
+        trainer._assert_gradient_contract()
+
+
+def test_gradient_contract_rejects_zero_transform_gradient():
+    trainer = object.__new__(Trainer)
+    trainer.transform = nn.Linear(1, 1)
+    for parameter in trainer.transform.parameters():
+        parameter.grad = torch.zeros_like(parameter)
+
+    frozen = _TwoParameterModule()
+    trainer.backend = SimpleNamespace(
+        talker=frozen,
+        tts=SimpleNamespace(model=SimpleNamespace(
+            speech_tokenizer=SimpleNamespace(model=frozen))),
+    )
+    trainer.experts = SimpleNamespace(
+        emotion=SimpleNamespace(model=frozen),
+        speaker=SimpleNamespace(model=frozen),
+    )
+
+    with pytest.raises(RuntimeError, match="exactly zero"):
         trainer._assert_gradient_contract()
