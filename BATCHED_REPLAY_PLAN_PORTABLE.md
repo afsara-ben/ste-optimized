@@ -1,0 +1,319 @@
+# Batched Expert-in-the-Loop Replay Training — Portable Plan
+
+**Created:** 2026-07-19 (UTC)
+**Updated:** 2026-07-19 (UTC) — **IMPLEMENTED.** The plan below is now code: a
+self-contained package at `ste-optimized/` (repo root; own `pyproject.toml`, package
+`ste_optimized`, no dependency on the `emotionsteer` package — designed to be moved
+into its own git repo). Status: all 17 modules written; 23 CPU unit tests green;
+5 GPU parity "trust gates" written and **still to be run on the target machine**
+(that is the remaining Stage-0 gate). Section 6 now gives the actual commands and
+maps each plan phase to its module. §3.1 (exact loss formula, two-pass T(v)
+recomputation, gradient-path semantics incl. what STE captures vs drops) added.
+**2026-07-20:** five implementation bugs fixed after external review (per-chunk
+T(v) recompute; reference-conditioned decode+trim mirroring native inference;
+codec dtype cast; explicit codec freeze + full gradient-contract tripwire;
+subtalker warpers in the residual STE derivative) plus an optional
+`steer_frame0_predictor` flag (default off). **Initial milestone simplified:**
+one angry transform, one fixed batch, and one acceptance test — the complete
+reference-conditioned waveform loss must produce a finite nonzero expert-only
+gradient in T_θ, change its parameters, decrease under repeated optimization,
+and leave every frozen model gradient-free — then multi-chunk and native/replay
+parity, BEFORE any DDP, bucketing, or other emotions (see `ste-optimized/README.md`).
+**Derived from:** `BATCHED_REPLAY_PLAN_july19.md` (machine-specific measurements and
+file-level work items live there; this document is the machine-independent, executable
+version). Objective and estimator are those of the original replay program; only the
+batching design and training hygiene change.
+
+---
+
+## 1. Goal
+
+Train a rank-16 low-rank transform `T_θ(v) = v + U(Dv)` (identity init: orthonormal
+random `D`, zero `U`; 32,768 params) mapping a layer-15 contrast `v ∈ R^1024` to an
+improved steering vector `u`, by **generating steered audio during training and
+backpropagating frozen expert losses** (emotion2vec + WavLM) through a fixed-hard-STE
+replay graph into `T_θ` only. Qwen and the experts stay frozen; no RL; no reward models.
+
+## 2. Prerequisites (any machine)
+
+- **GPU:** ≥ 24 GB VRAM (Qwen-0.6B + both experts resident together; pass-2 chunks are
+  checkpointed and a few GB). More VRAM ⇒ wider generation batches, nothing else.
+  A second GPU is used for a second seed, never for intra-update DDP (measured 1.13×).
+- **Software:** Python ≥ 3.12, torch ≥ 2.7 + CUDA, `qwen-tts == 0.1.1`,
+  transformers ≥ 4.57, flash-attn (fallback sdpa — record which), funasr + modelscope,
+  soundfile, librosa, jiwer. Record all versions in artifacts.
+- **Models (pinned):** `Qwen/Qwen3-TTS-12Hz-0.6B-Base`
+  @ `5d83992436eae1d760afd27aff78a71d676296fc` (bundles the 12 Hz speech tokenizer);
+  `emotion2vec/emotion2vec_plus_large` and `microsoft/wavlm-base-plus-sv`
+  (**inside the training loss**, frozen); `openai/whisper-large-v3-turbo`
+  (validation WER only).
+- **Data per emotion:** ~200 train pair contrasts + neutral-base catalog, ≥18
+  (target 40) validation contrasts, extracted with the frozen extraction pipeline;
+  per-pair extraction-time expert scores retained as fixed loss weights. Canonical
+  speaker partition (mandatory): train 0011/0014/0017/0020, val 0012/0016,
+  test 0013/0019, reserve 0015/0018.
+
+## 3. The batched update (Algorithm)
+
+One optimizer update = `K` contrasts × `M` bases = `R` rows (defaults `K=10, M=4,
+R=40`; rationale in §4).
+
+```text
+INPUT: contrast batch {v_1..v_K} (shuffled without replacement, per-speaker balanced),
+       for each contrast M cross-speaker neutral bases (base speaker ≠ contrast
+       speaker; resampled every epoch), current transform T_θ
+
+PASS 1 — hard sampling, no gradients, ONE batched generate over all R rows:
+  1  u_i ← T_θ(v_i).detach();  every row of contrast i carries u_i
+  2  steering: per-row vector applied at layer 15 on DECODE steps only
+     (prefill unsteered), each steered state renormalized to its original L2
+     norm; optional `steer_frame0_predictor` flag additionally steers ONLY the
+     last prompt position (the frame-0 predictor), symmetrically here, in
+     replay, and in evaluation — default OFF (historical convention)
+  3  prompts served from a base_id-keyed cache (encode once, reuse all epochs)
+  4  frame cap ≈ 2 × p95 of natural code lengths (NOT an arbitrary large cap);
+     bucket rows by expected length so one long row cannot stall short ones
+  5  per-row EOS: a capped row FAILS ALONE and is dropped; accept the update if
+     ≥ 80% of rows survive (renormalize weights, log failures); never retry
+     inside the update
+  OUTPUT: hard codes Y_r ∈ ℕ^{T_r×16} per surviving row
+
+PASS 2 — gradients, in chunks of ~8 rows with gradient accumulation:
+  6  batched padded teacher-forced replay forward over the chunk's stored codes,
+     with the SAME per-row steering and renormalization as pass 1, reproducing
+     pass-1's logit processing (temperature, top-k/p, EOS suppression,
+     repetition penalty from the stored prefix) so the STE derivative matches
+     the distribution the codes were sampled from
+  7  fixed-hard STE: y = one_hot(code) − sg(p) + p  (forward = sampled code,
+     gradient = replay probability)
+  8  REFERENCE-CONDITIONED differentiable codec decode: prepend the base's
+     reference codes as constant one-hots, decode cat([ref; ŷ]) chunk-batched
+     with activation checkpointing, trim the reference span proportionally —
+     mirroring native inference (qwen3_tts_model.py:614-629) so the experts
+     score the SAME waveform normal Qwen output produces
+     → waveforms → batched emotion2vec loss + WavLM speaker loss
+  9  chunk loss = Σ rows [emotion_loss + speaker_weight · speaker_loss] · w_row;
+     backward per chunk (accumulate)
+
+STEP: clip grad-norm 1.0; AdamW step (lr 1e-3, wd 1e-4, 5% warmup + cosine);
+      log per-phase wall time, loss components, grad/param norms, survival rate
+```
+
+### 3.1 Loss function and gradient path (exact)
+
+```text
+u_i        = T_θ(v_i)                     # pass 1 uses u_i.detach();
+                                          # pass 2 RECOMPUTES T_θ(v_i) with grad —
+                                          # same values, different autograd status
+Y_{i,b}    ~ Generate(prompt_b, steer(u_i.detach()))          # pass 1, no gradients
+p_t        = softmax(process(replay_logits_t(u_i)))           # pass 2; t indexes frames
+ŷ_t        = onehot(Y_t) − sg(p_t) + p_t                      # fixed-hard STE
+wav_{i,b}  = trim( CodecDecode_soft([onehot(ref_b); ŷ]) )     # frozen, differentiable
+```
+
+`process(·)` covers codebook 0's full pass-1 chain (repetition penalty,
+suppress, min-new-tokens, temperature/top-k/top-p) AND, for the residual
+codebooks 1-15, the subtalker's own warpers (temperature 0.9 / top-k 50 by
+default) — the STE derivative must replay the distribution each codebook was
+actually sampled from. The decode is reference-conditioned: the base's
+reference codes `ref_b` enter as CONSTANT one-hots (no gradient) and the
+reference span is trimmed proportionally, exactly as native inference decodes.
+Inside a chunked update, `u_i = T_θ(v_i)` is recomputed FRESH per chunk —
+each chunk's backward frees the graph it traverses, so a transform forward
+shared across chunks would crash on the second chunk.
+
+Notation note — the subscript t indexes frames MATHEMATICALLY; computationally pass 2
+is BATCHED, not a per-frame loop: one padded teacher-forced talker forward per chunk
+of rows produces the logits of every frame of every row simultaneously, one
+`forward_sub_talker_finetune` call scores all rows' frames flattened, the codec
+decodes the chunk's one-hot tensors together, and the experts score the chunk's
+waveforms as one padded batch. The only frame-indexed construction is the
+repetition-penalty "seen" mask — a constant of the stored trajectory, built under
+no_grad; the penalty itself is then applied in one vectorised tensor op.
+
+```text
+L = (1/N) · Σ_{i,b ∈ surviving rows}
+        w_i · [ −log P_e2v(c | wav_{i,b})                     # emotion loss
+                + λ_spk · (1 − cos(xvec(wav_{i,b}), xvec(ref_b))) ]   # speaker loss
+    + λ_id·L_identity + λ_cos·L_cosine + λ_norm·L_norm        # keep T(v) near v
+```
+
+The regularizers, averaged over the update's K contrast vectors (fp32; their
+gradient reaches θ directly, no model in the path), with d = hidden size (1024):
+
+```text
+L_identity = mean_i  ‖T_θ(v_i) − v_i‖² / d          # small residual
+L_cosine   = mean_i  ( 1 − cos(T_θ(v_i), v_i) )     # keep direction
+L_norm     = mean_i  ( log( ‖T_θ(v_i)‖ / ‖v_i‖ ) )² # keep norm ratio near 1
+```
+
+Defaults: λ_spk = 1.0; λ_id = λ_cos = λ_norm = 0.01; N = total rows of the update
+(across ranks if sharded); w_i = the pair's extraction-time target-emotion
+probability — a CONSTANT, no expert gradients flow through it.
+P_e2v = frozen emotion2vec head; xvec = frozen WavLM-SV embedding; ref_b = the base's
+ICL reference recording.
+
+Gradient path (only θ trains): L → experts → waveform → codec decoder → ŷ
+(∂ŷ/∂logits = ∂p/∂logits) → replay logits → talker layers above 15 → the
+renormalised steering injection at layer 15 → u_i → θ, plus the direct regularizer
+path. Every module on the way is frozen but differentiable.
+
+What the gradient captures vs drops: it knows how u shifts each frame's token
+DISTRIBUTION on the frozen pass-1 trajectory (and how that changes the decoded
+waveform and expert scores). It does NOT know how u would have changed WHICH tokens
+got sampled — the sampled-token → next-step-input feedback edge is severed because
+pass-2 inputs are frozen constants, and the EOS/length decision is likewise frozen
+(duration ceiling). That feedback closes ACROSS updates instead: every pass 1
+re-samples with the current u. Magnitude context: the severed paths carried most of
+the exact gradient's norm (historically 392.6 exact vs 8.5 replay); the program's
+gated bet is that the surviving term's direction is useful.
+
+Seeds: everything deterministic per (seed, update, row identity); two training seeds
+required for any claim.
+
+## 4. Dataset size and base allocation (assessed 2026-07-19)
+
+- **200 train contrasts/emotion is not overkill:** the transform edits a 16-dim
+  subspace; 200 samples across 4 speakers is a modest ratio, and with batching an
+  epoch costs minutes — shrinking the pool saves nothing. Keep the frozen-manifest /
+  leakage-check machinery unchanged (cheap, standard).
+- **Validation is the thin side:** gates were designed for 40 pairs; run the pilot on
+  what exists but extend toward 40 before any freeze decision (bootstrap CIs at n≈18
+  are wide).
+- **Bases: 5 per contrast was an inheritance, not a requirement.** It dates from
+  1-contrast-per-update designs where bases were the only averaging axis. In a batched
+  update the gradient averages over all R rows regardless of grouping, so at fixed R
+  the real trade is contrast diversity (the map's actual input data) vs repeated noisy
+  evaluations of one input. Prefer diversity: **K=10 × M=4** default, floor `M=2`
+  (per-contrast diagnostics get too noisy below), `M=5` only as a
+  historical-comparability arm. Bases are resampled each epoch, so coverage of each
+  contrast's ~15 eligible cross-speaker bases accumulates within a few epochs anyway.
+
+## 5. Calibration on a new machine (run FIRST; ~15 min)
+
+```bash
+ste-optimized calibrate -c configs/angry.yaml     # benchmarks 1-4 -> JSON report
+ste-optimized train -c configs/angry.yaml --max-updates 10   # benchmark 5 (timed smoke)
+```
+
+Five micro-benchmarks fully determine the schedule. Reference values (RTX A6000-48GB,
+bf16, flash-attn 2) in brackets — do not reuse them unmeasured:
+
+1. Single-stream generation ms/frame [124 ms/frame].
+2. Batched generation at B ∈ {8, 16, 32, 64}: frames/s and per-step wall
+   [41 / 87 / 200 frames/s at 8/16/32; per-step flat ~132 ms]. Pick the knee.
+3. Replay/TF fwd+bwd microbatch through the talker [~0.5 s at 16 rows × 192 pos].
+4. Batched codec decode + emotion2vec + WavLM forward per row
+   [25 / 8 / 3 ms/row at B=8].
+5. **10-update timed smoke** of the full loop — the only trustworthy source for the
+   pass-2 backward (differentiable codec + experts, checkpointed) [single-row
+   reference ~0.36 s at 50 frames; batched value must be measured, ±2× a priori].
+
+Schedule formulas:
+
+```text
+t_update ≈ R × mean_frames / gen_frames_per_s   (pass 1)
+         + n_chunks × t_chunk(measured in #5)   (pass 2)
+         + ~1 s                                 (cached prompts, optimizer, logs)
+epoch    = ceil(N_train / K) updates
+training ≤ 300 updates with early stop (validate every 25, patience 5)
+```
+
+Reference outcome (A6000): t_update ≈ 30–45 s for K=10 ⇒ epoch ~10–16 min ⇒ full
+training ~2.5–4 h/seed ⇒ one emotion end-to-end ~3.5–5.5 h wall with 2 seeds parallel.
+
+## 6. Workflow (implemented — commands are real)
+
+Implementation map (package `ste_optimized`, folder `ste-optimized/`):
+
+| Plan element | Module |
+|---|---|
+| Pass-1 batched generation, prompt cache by base_id, per-row EOS | `backend.py` |
+| Per-row steering + renorm (decode-step and masked-replay), extraction capture | `hooks.py` |
+| Fixed-hard STE + pass-1 logit-chain replay (rep-penalty 1.05, suppress, min-new-tokens, temp/top-k/top-p) | `ste.py` |
+| Pass-2 padded teacher-forced replay, LEFT-padding (matches native generate), target gathering, subtalker scoring | `replay.py` |
+| Differentiable soft-codec decode (chunked + checkpointed) | `codec.py` |
+| Frozen emotion2vec + WavLM, batched, differentiable | `experts.py` |
+| ESD ingest, pair/base records, fail-closed leakage checks | `data.py` |
+| Batched resumable mean-decode contrast extraction + fixed weights (nothing pre-extracted assumed) | `extraction.py` |
+| K×M sampler, per-epoch base rotation, resume | `sampling.py` |
+| Update loop: survival policy, chunked accumulation, AdamW+warmup/cosine, phase timings, checkpoints, early stop | `training.py` |
+| Cadence + full gated panel, cached controls, bootstrap CI | `evaluation.py` |
+| Micro-benchmarks (§5) | `calibrate.py` |
+| Seed-parallel policy + optional torchrun `ddp_rows` row-sharding | `distributed.py` |
+
+- **Stage 0 — engineering: DONE** (the package above; 27 CPU unit tests green,
+  incl. the 2026-07-20 review fixes and their regressions).
+  Remaining Stage-0 gate = the SIMPLIFIED INITIAL MILESTONE, in this order —
+  `STE_OPT_REF_WAV=<speech.wav> pytest -m gpu tests/test_parity.py`:
+  1. `test_acceptance_one_fixed_batch` — one angry transform, ONE FIXED BATCH,
+     complete reference-conditioned waveform loss: finite nonzero expert-only
+     gradient in T_θ; parameters change on a step; loss decreases under
+     repeated optimization; every frozen model (talker, codec, emotion2vec,
+     WavLM) ends without parameter gradients.
+  2. `test_multichunk_accumulation` — per-chunk T(v) recompute: no freed-graph
+     error, gradients accumulate, frozen models stay clean.
+  3. Native/replay parity — prompt assembly vs captured native prefill;
+     soft-vs-hard codec (bare AND reference-conditioned); emotion2vec head vs
+     funasr inference.
+  DDP (`ddp_rows`), length bucketing, and the other emotions are DEFERRED
+  until all three pass. These gates pin the replicated qwen-tts 0.1.1
+  internals against the installed version; nothing proceeds until they pass.
+- **Stage 1 — data:**
+  `ste-optimized build-data -c configs/angry.yaml --source /path/to/ESD` then
+  `ste-optimized extract -c configs/angry.yaml --split train` (and `validation`);
+  set `data.contrasts_path`. Extraction is batched (~25× over scalar) and resumable.
+- **Stage 2 — gates:** the milestone gates above (acceptance → multi-chunk →
+  parity, in order) + `calibrate` + the 10-update timed smoke (§5) — the smoke
+  is the only trustworthy source for the pass-2 backward cost.
+- **Stage 3 — train:** 60-update pilot → inspect cadence panel → ≤300 updates with
+  early stopping; two seeds, one GPU each:
+  `CUDA_VISIBLE_DEVICES=0 ste-optimized train -c configs/angry.yaml --seed 42 --output runs/s42 &`
+  `CUDA_VISIBLE_DEVICES=1 ste-optimized train -c configs/angry.yaml --seed 43 --output runs/s43 &`
+  (optional row-sharding instead: `torchrun --standalone --nproc-per-node=2 -m
+  ste_optimized train -c … --distributed ddp_rows`; historically ~1.13× — seed-parallel
+  is the recommended use of extra GPUs.)
+- **Stage 4 — validation gate** (unchanged from the program):
+  `ste-optimized evaluate -c configs/angry.yaml --transform runs/s42/best_transform.pt`
+  — fixed panel, batched generation, controls cached once; per-pair T(v) vs raw v at
+  α=1; exported T(v_global) and raw v_global over the alpha sweep; closed-form
+  purifiers; zero-input control. Gates: emotion-prob delta > 0 with 95%
+  paired-bootstrap CI excluding 0; WavLM ≥ 0.85 and degradation ≤ 0.02; ISR ≥ 80% and
+  ≥ control − 5 pp; WER ≤ control + 2 pp. Checkpoint chosen on validation only; test
+  split touched once, after freezing.
+- **Stage 5 — fallback:** teacher-forced likelihood-preference trainer
+  (`TEACHER_FORCED_PREFERENCE_PLAN_PORTABLE.md`) if replay fails gates.
+- **Stage 6 — replicate** per emotion; shared conditioned transform only after all pass.
+
+## 7. Verification checklist (implemented in `ste-optimized/tests/`)
+
+- **CPU unit tests (27, green):** `test_transform.py` (identity init, T(0)=0,
+  saddle-avoidance, save/load, regularizers), `test_ste.py` (STE forward-hard /
+  gradient-soft, history-dependent repetition penalty, min-new-tokens EOS
+  suppression, top-k/temperature, gradient flow through the chain),
+  `test_hooks.py` (prefill skipped, per-position renorm, masked positions only,
+  capture respects per-row lengths, `steer_frame0_predictor` flag),
+  `test_training_chunks.py` (freed-graph regression: the old shared-T(v)
+  pattern raises; per-chunk recompute grads == single-backward grads),
+  `test_sampling_data.py` (cross-speaker constraint, epoch coverage, base
+  rotation, resume parity, quality filter, leakage fail-closed).
+- **GPU milestone gates (5, `pytest -m gpu`, in order):** the one-fixed-batch
+  acceptance test (complete reference-conditioned loss; four assertions),
+  multi-chunk accumulation, prompt-assembly parity, soft-codec parity (bare
+  and reference-conditioned), emotion2vec-head parity.
+- **End-to-end (after the milestone):** export → panel → gates vs raw /
+  global / purifier / cached-activation baselines (`evaluate` CLI).
+
+Defects caught by these tests so far: an autograd in-place violation in the
+penalty-chain replay and a negative suppress-range index (during initial
+implementation), plus five review-found bugs on 2026-07-20 (shared-graph
+double-backward, missing reference-conditioned decode, fp32→bf16 codec crash,
+unfrozen codec, unwarped residual STE derivative) — evidence the gates bite,
+not decoration.
+
+## 8. Known limits (unchanged)
+
+Fixed-hard STE drops cross-timestep credit and the EOS/duration path (duration is a
+first-order emotion cue — an objective ceiling, not a bug); emotion2vec is both trainer
+and judge, so a positive result is provisional until independently checked. Batching
+changes the cost of the experiment, not its epistemics.

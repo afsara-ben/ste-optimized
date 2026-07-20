@@ -1,0 +1,33 @@
+# Angry transform — batched expert-in-the-loop replay training.
+# Defaults follow BATCHED_REPLAY_PLAN_PORTABLE.md; adjust batch sizes only
+# from your own `ste-optimized calibrate` output, never from another machine's.
+
+model:
+  device: cuda:0
+  attn_implementation: flash_attention_2   # use "sdpa" if flash-attn unavailable
+
+sampling:
+  max_frames: 192          # ~2 x p95 of natural code lengths; re-derive per dataset
+
+data:
+  emotion: angry
+  dataset_dir: data/prepared/angry
+  contrasts_path: ""       # set after `ste-optimized extract --split train`
+  bases_per_speaker: 5
+
+train:
+  contrasts_per_update: 10   # K
+  bases_per_contrast: 4      # M  (floor 2; 5 = historical-parity arm)
+  chunk_rows: 8
+  max_updates: 300
+  eval_every: 25
+  early_stop_patience: 5
+  seed: 42
+  output_dir: runs/angry-seed42
+
+distributed:
+  mode: none                 # none | seed_parallel (launch per GPU) | ddp_rows
+
+eval:
+  control_cache_dir: runs/control-cache
+  cadence_rows: 12

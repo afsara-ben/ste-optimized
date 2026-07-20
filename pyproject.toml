@@ -1,0 +1,38 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ste-optimized"
+version = "0.1.0"
+description = "Batched expert-in-the-loop replay training of a steering-vector transform for Qwen3-TTS (see BATCHED_REPLAY_PLAN_PORTABLE.md)"
+requires-python = ">=3.11"
+dependencies = [
+    "torch>=2.4",
+    "torchaudio>=2.4",
+    "numpy",
+    "pyyaml",
+    "soundfile",
+    "librosa",
+    "qwen-tts==0.1.1",
+    "transformers>=4.57",
+    "huggingface_hub",
+]
+
+[project.optional-dependencies]
+experts = ["funasr>=1.2", "modelscope"]
+eval = ["jiwer"]
+dev = ["pytest", "ruff"]
+
+[project.scripts]
+ste-optimized = "ste_optimized.__main__:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+markers = [
+    "gpu: requires a CUDA device and downloaded models",
+    "slow: long-running gpu test (overfit smoke)",
+]
+addopts = "-m 'not gpu'"
