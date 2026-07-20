@@ -1,13 +1,15 @@
 # Batched Expert-in-the-Loop Replay Training — Portable Plan
 
 **Created:** 2026-07-19 (UTC)
-**Updated:** 2026-07-19 (UTC) — **IMPLEMENTED.** The plan below is now code: a
+**Updated:** 2026-07-20 (UTC) — **IMPLEMENTATION PRESENT; ACCEPTANCE PENDING.**
+The plan below is now code: a
 self-contained package at `ste-optimized/` (repo root; own `pyproject.toml`, package
 `ste_optimized`, no dependency on the `emotionsteer` package — designed to be moved
-into its own git repo). Status: all 17 modules written; 23 CPU unit tests green;
-5 GPU parity "trust gates" written and **still to be run on the target machine**
-(that is the remaining Stage-0 gate). Section 6 now gives the actual commands and
-maps each plan phase to its module. §3.1 (exact loss formula, two-pass T(v)
+into its own git repo). Status: all 17 modules written; 27 CPU unit tests green in
+the 2026-07-20 01:28 UTC rerun; 5 GPU parity "trust gates" written and **still to
+be run on the target machine**; the real-contrast angry learning smoke is not yet
+implemented (these are the remaining Stage-0 gates; see §8). Section 6 gives the
+commands and maps each plan phase to its module. §3.1 (exact loss formula, two-pass T(v)
 recomputation, gradient-path semantics incl. what STE captures vs drops) added.
 **2026-07-20:** five implementation bugs fixed after external review (per-chunk
 T(v) recompute; reference-conditioned decode+trim mirroring native inference;
@@ -242,15 +244,19 @@ Implementation map (package `ste_optimized`, folder `ste-optimized/`):
 | Micro-benchmarks (§5) | `calibrate.py` |
 | Seed-parallel policy + optional torchrun `ddp_rows` row-sharding | `distributed.py` |
 
-- **Stage 0 — engineering: DONE** (the package above; 27 CPU unit tests green,
+- **Stage 0 — engineering code written; acceptance NOT YET COMPLETE** (the package
+  above; 27 CPU unit tests green,
   incl. the 2026-07-20 review fixes and their regressions).
-  Remaining Stage-0 gate = the SIMPLIFIED INITIAL MILESTONE, in this order —
+  Remaining Stage-0 gates = the SIMPLIFIED INITIAL MILESTONE, in this order —
   `STE_OPT_REF_WAV=<speech.wav> pytest -m gpu tests/test_parity.py`:
   1. `test_acceptance_one_fixed_batch` — one angry transform, ONE FIXED BATCH,
      complete reference-conditioned waveform loss: finite nonzero expert-only
      gradient in T_θ; parameters change on a step; loss decreases under
      repeated optimization; every frozen model (talker, codec, emotion2vec,
      WavLM) ends without parameter gradients.
+     **Current limitation:** the implementation supplies random Gaussian vectors,
+     not an extracted angry-minus-neutral contrast, so this is presently a synthetic
+     plumbing test rather than the real angry-learning acceptance gate required in §8.
   2. `test_multichunk_accumulation` — per-chunk T(v) recompute: no freed-graph
      error, gradients accumulate, frozen models stay clean.
   3. Native/replay parity — prompt assembly vs captured native prefill;
@@ -311,7 +317,54 @@ double-backward, missing reference-conditioned decode, fp32→bf16 codec crash,
 unfrozen codec, unwarped residual STE derivative) — evidence the gates bite,
 not decoration.
 
-## 8. Known limits (unchanged)
+## 8. Timestamped execution results
+
+### 2026-07-20 01:28:01 UTC — review evidence (this workspace)
+
+**Scope and changes made:** this review was read-only with respect to the training
+implementation. No smoke-test, training-loop, evaluation, or model code was changed,
+and no angry transform was trained. Documentation changes only: the stale CPU-test
+count and Stage-0 status were corrected, and this timestamped record was added. The
+proposed real-contrast smoke-test changes remain future work.
+
+**Environment:** torch `2.7.1+cu126`; `torch.cuda.is_available() == False`;
+CUDA device count `0`. Therefore the full Qwen → replay → codec → experts → backward
+GPU milestone could not execute in this workspace.
+
+**Commands and observed results:**
+
+```text
+PYTHONPATH=src pytest -q
+27 passed, 5 deselected in 1.18s
+
+PYTHONPATH=src pytest -q -m gpu tests/test_parity.py -rs
+5 skipped in 1.14s — every test skipped because no CUDA device was available
+```
+
+**Observation:** the successful command above is a CPU unit-test run, not the angry
+training smoke. It supports the CPU-level transform/hook/sampling/chunking plumbing
+only. It does **not** show that an angry contrast was learned, that `T(v)` improved
+anger on neutral utterances, or that expert gradients traversed the installed Qwen
+and codec graph on GPU. No audio, trained checkpoint, or learned steering vector was
+produced.
+
+The currently written GPU acceptance test would still be insufficient for that
+claim even on a CUDA machine: it supplies independent random Gaussian vectors rather
+than one extracted angry-minus-neutral contrast shared across multiple neutral bases,
+and its tail criterion can pass when only the combined emotion-plus-speaker loss (or
+sampling noise) improves. The first real smoke must instead use one real contrast,
+broadcast the same `T(v)` over a small batched neutral panel, run the complete Qwen
+generation/replay/codec/expert/backward path, and separately require held-out angry
+probability improvement subject to speaker-similarity and termination constraints.
+It also needs an attempt or wall-time cap so a short smoke cannot hang or repeatedly
+evaluate update zero after generation-survival failures.
+
+**Current milestone status:** CPU gate passed; GPU plumbing gate unexecuted; real
+angry-transform learning gate unimplemented and unexecuted. Stage 0 must not be called
+complete until those last two gates pass and save their checkpoint, source contrast,
+`T(v)`, metrics, and sample audio.
+
+## 9. Known limits (unchanged)
 
 Fixed-hard STE drops cross-timestep credit and the EOS/duration path (duration is a
 first-order emotion cue — an objective ceiling, not a bug); emotion2vec is both trainer
