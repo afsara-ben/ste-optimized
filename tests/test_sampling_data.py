@@ -78,6 +78,42 @@ def test_resume_reproduces_next_batch():
     assert [r["base_id"] for r in got.rows] == [r["base_id"] for r in expected.rows]
 
 
+def test_epoch_tail_is_carried_into_full_distinct_batch_and_resumes():
+    # Ten contrasts at K=4 would historically emit a two-contrast tail.  The
+    # third update must now carry two items from epoch 1 and remain full.
+    contrasts = _contrasts(n_per_speaker=5, speakers=("0011", "0014"))
+    a = _sampler(K=4, M=2, contrasts=contrasts)
+    first = a.next_batch()
+    second = a.next_batch()
+    boundary = a.next_batch()
+
+    assert len(first.contrast_ids) == len(second.contrast_ids) == 4
+    assert len(boundary.contrast_ids) == 4
+    assert len(boundary.rows) == 8
+    assert len(set(boundary.contrast_ids)) == 4
+    assert boundary.epoch == 0
+    assert a.epoch == 1
+    assert a.cursor == 2
+
+    state = a.state_dict()
+    expected = a.next_batch()
+    b = _sampler(K=4, M=2, contrasts=contrasts)
+    b.load_state_dict(state)
+    got = b.next_batch()
+    assert got.contrast_ids == expected.contrast_ids
+    assert [row["base_id"] for row in got.rows] == [
+        row["base_id"] for row in expected.rows
+    ]
+
+
+def test_sampler_rejects_pool_smaller_than_full_contrast_batch():
+    with pytest.raises(ValueError, match="need K=4"):
+        _sampler(
+            K=4,
+            contrasts=_contrasts(n_per_speaker=1, speakers=("0011", "0014")),
+        )
+
+
 def test_quality_filter_excludes_bad_pairs():
     rows = _contrasts()
     rows[0]["emotion_prob"] = 0.1

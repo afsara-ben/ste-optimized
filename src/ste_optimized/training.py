@@ -33,6 +33,7 @@ from .extraction import load_contrasts
 from .replay import replay_chunk
 from .sampling import BatchSampler, UpdateBatch
 from .transform import LowRankTransform, save_transform
+from .whisper_asr import WhisperASRExpert
 
 
 def _lr_lambda(step: int, total: int, warmup: int) -> float:
@@ -49,6 +50,7 @@ class Trainer:
         dist: DistributedContext,
         backend: QwenTTSBackend | None = None,
         experts: ExpertSuite | None = None,
+        asr: WhisperASRExpert | None = None,
         contrasts: list[dict] | None = None,
         bases: list | None = None,
     ) -> None:
@@ -67,6 +69,23 @@ class Trainer:
 
         self.backend = backend if backend is not None else QwenTTSBackend(cfg.model)
         self.experts = experts if experts is not None else ExpertSuite.load(cfg.model.device)
+        self.asr = asr
+        if cfg.asr.enabled and self.asr is None:
+            asr_dtype = {
+                "float16": torch.float16,
+                "bfloat16": torch.bfloat16,
+                "float32": torch.float32,
+            }.get(cfg.asr.dtype)
+            if asr_dtype is None:
+                raise ValueError(f"unsupported ASR dtype: {cfg.asr.dtype!r}")
+            self.asr = WhisperASRExpert(
+                device=cfg.model.device,
+                model_id=cfg.asr.model_id,
+                revision=cfg.asr.revision,
+                dtype=asr_dtype,
+                language=cfg.asr.language,
+                task=cfg.asr.task,
+            )
         self.sr = output_sample_rate(self.backend.tts.model.speech_tokenizer)
 
         if contrasts is None:
@@ -126,7 +145,7 @@ class Trainer:
 
         # ---- pass 2: chunked replay -> codec -> experts -> backward --------
         self.optimizer.zero_grad(set_to_none=True)
-        emotion_losses, speaker_losses, probs, sims = [], [], [], []
+        emotion_losses, speaker_losses, asr_losses, probs, sims = [], [], [], [], []
         t0 = time.perf_counter()
         n_scored = 0
         for cstart in range(0, len(survivors), cfg.train.chunk_rows):
@@ -155,8 +174,20 @@ class Trainer:
             ref_paths = [chunk_entries[j].reference_audio
                          for j in range(len(chunk_entries))]
             s_loss, s_sim = self.experts.speaker.loss(wavs16, ref_paths)
+            if self.asr is not None:
+                a_loss = self.asr.loss(
+                    wavs16, [entry.target_text for entry in chunk_entries]
+                )
+            else:
+                a_loss = torch.zeros_like(e_loss)
 
-            loss_rows = chunk_w * (e_loss + cfg.train.speaker_weight * s_loss)
+            # Emotion confidence weights the contrast-derived emotion/speaker
+            # objective.  ASR is deliberately unweighted: every generated row
+            # has a known requested transcript and must remain intelligible.
+            loss_rows = (
+                chunk_w * (e_loss + cfg.train.speaker_weight * s_loss)
+                + cfg.asr.loss_weight * a_loss
+            )
             total_rows = max(len(survivors), 1) * self.dist.world_size
             chunk_loss = loss_rows.sum() / total_rows
             reg = self.transform.regularization(
@@ -167,6 +198,7 @@ class Trainer:
 
             emotion_losses += e_loss.detach().tolist()
             speaker_losses += s_loss.detach().tolist()
+            asr_losses += a_loss.detach().tolist()
             probs += e_prob.tolist()
             sims += s_sim.tolist()
             n_scored += len(chunk_ids)
@@ -203,6 +235,7 @@ class Trainer:
             "rows": len(rows), "survivors": n_scored, "survival": survival,
             "emotion_loss": _mean(emotion_losses),
             "speaker_loss": _mean(speaker_losses),
+            "asr_loss": _mean(asr_losses),
             "emotion_prob": _mean(probs), "speaker_sim": _mean(sims),
             # ``grad_norm`` is retained for artifact compatibility and is the
             # pre-clipping norm returned by clip_grad_norm_.
@@ -247,9 +280,15 @@ class Trainer:
                     self.completed % self.cfg.train.eval_every == 0 and \
                     self.dist.is_main:
                 metric = cadence_eval(self)
-                improved = metric > self.best_metric
+                # ``cadence_metric`` uses -1.0 as a fail-closed sentinel when
+                # no rows can be scored or the WER preservation gate fails.
+                # It must never become the "best" checkpoint merely because
+                # the initial best is -inf.
+                eligible = math.isfinite(metric) and metric > -1.0
+                improved = eligible and metric > self.best_metric
                 self._log({"event": "cadence_eval", "update": self.completed,
-                           "metric": metric, "improved": improved})
+                           "metric": metric, "eligible": eligible,
+                           "improved": improved})
                 if improved:
                     self.best_metric = metric
                     self.evals_without_improvement = 0
@@ -286,6 +325,10 @@ class Trainer:
             "codec": getattr(st, "model", None),
             "emotion2vec": self.experts.emotion.model,
             "wavlm": self.experts.speaker.model,
+            "whisper": (
+                getattr(self, "asr", None).model
+                if getattr(self, "asr", None) is not None else None
+            ),
         }
         for name, module in frozen.items():
             if module is None:
@@ -337,6 +380,9 @@ class Trainer:
             "config": self.cfg.to_dict(),
         }, tmp)
         tmp.replace(self.out / "checkpoint.pt")
+        snapshot_dir = self.out / "checkpoints"
+        snapshot_dir.mkdir(parents=True, exist_ok=True)
+        self._export(snapshot_dir / f"transform-{self.completed:05d}.pt")
 
     def _maybe_resume(self) -> None:
         path = self.out / "checkpoint.pt"

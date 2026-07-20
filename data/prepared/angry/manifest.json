@@ -1,0 +1,40 @@
+{
+  "schema": "ste-optimized/dataset/v1",
+  "emotion": "angry",
+  "speaker_partition": {
+    "train": [
+      "0011",
+      "0014",
+      "0017",
+      "0020"
+    ],
+    "validation": [
+      "0012",
+      "0016"
+    ],
+    "test": [
+      "0013",
+      "0019"
+    ],
+    "reserve": [
+      "0015",
+      "0018"
+    ]
+  },
+  "counts": {
+    "train": 200,
+    "validation": 40,
+    "test": 40,
+    "reserve": 20
+  },
+  "base_counts": {
+    "train": 20,
+    "validation": 10,
+    "test": 10,
+    "reserve": 10
+  },
+  "files": {
+    "pairs": "3c5706a23bbac7e035f38024d966ebc780e6209f9386bb494e40a699f391a4b2",
+    "bases": "b79838d5ccb3dbd76d25932105402a0a556d101feee820f4ee15a589b9ed4512"
+  }
+}

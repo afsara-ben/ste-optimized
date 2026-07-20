@@ -66,11 +66,21 @@ distributed:
   mode: none
   backend: nccl
 
+asr:
+  enabled: true
+  model_id: openai/whisper-large-v3-turbo
+  revision: 41f01f3fe87f28c78e2fbf8b568835947dd65ed9
+  dtype: float16
+  loss_weight: 0.2
+  max_wer_degradation: 0.06
+  # Four short held-out smoke rows are a plumbing check, not the production
+  # statistical gate.
+  min_validation_reference_words: 1
+
 eval:
   panel_seeds: 1
   # Cover the strong raw-vector control and the learned anger/speaker boundary.
   alphas: [0.73, 0.75, 1.0]
   cadence_rows: 4
   control_cache_dir: runs/angry-smoke-controls-unused
-  compute_wer: false
-  whisper_model: openai/whisper-large-v3-turbo
+  compute_wer: true

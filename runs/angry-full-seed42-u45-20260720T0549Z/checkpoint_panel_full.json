@@ -1,0 +1,598 @@
+{
+  "schema": "ste-optimized/checkpoint-panel/v1",
+  "run_dir": "/data/home/hys4qm/ste-optimized/runs/angry-full-seed42-u45-20260720T0549Z",
+  "panel": {
+    "split": "validation",
+    "mode": "full",
+    "hash": "3f04322faf0c8f01",
+    "rows": 40,
+    "requested_rows": null,
+    "items": [
+      {
+        "pair_id": "0012:000046",
+        "base_id": "0016:000020",
+        "target_text": "At the roots-of a bush of a grass."
+      },
+      {
+        "pair_id": "0012:000109",
+        "base_id": "0016:000050",
+        "target_text": "Rabbit gave dog a hurrying up sort of nudge."
+      },
+      {
+        "pair_id": "0012:000110",
+        "base_id": "0016:000059",
+        "target_text": "Zero four three a silver shilling is journey."
+      },
+      {
+        "pair_id": "0012:000125",
+        "base_id": "0016:000060",
+        "target_text": "That I am a born nurse."
+      },
+      {
+        "pair_id": "0012:000127",
+        "base_id": "0016:000077",
+        "target_text": "But I saw you walking."
+      },
+      {
+        "pair_id": "0012:000153",
+        "base_id": "0016:000020",
+        "target_text": "At the roots-of a bush of a grass."
+      },
+      {
+        "pair_id": "0012:000172",
+        "base_id": "0016:000050",
+        "target_text": "Rabbit gave dog a hurrying up sort of nudge."
+      },
+      {
+        "pair_id": "0012:000177",
+        "base_id": "0016:000059",
+        "target_text": "Zero four three a silver shilling is journey."
+      },
+      {
+        "pair_id": "0012:000185",
+        "base_id": "0016:000060",
+        "target_text": "That I am a born nurse."
+      },
+      {
+        "pair_id": "0012:000203",
+        "base_id": "0016:000077",
+        "target_text": "But I saw you walking."
+      },
+      {
+        "pair_id": "0012:000221",
+        "base_id": "0016:000020",
+        "target_text": "At the roots-of a bush of a grass."
+      },
+      {
+        "pair_id": "0012:000235",
+        "base_id": "0016:000050",
+        "target_text": "Rabbit gave dog a hurrying up sort of nudge."
+      },
+      {
+        "pair_id": "0012:000249",
+        "base_id": "0016:000059",
+        "target_text": "Zero four three a silver shilling is journey."
+      },
+      {
+        "pair_id": "0012:000257",
+        "base_id": "0016:000060",
+        "target_text": "That I am a born nurse."
+      },
+      {
+        "pair_id": "0012:000279",
+        "base_id": "0016:000077",
+        "target_text": "But I saw you walking."
+      },
+      {
+        "pair_id": "0012:000290",
+        "base_id": "0016:000020",
+        "target_text": "At the roots-of a bush of a grass."
+      },
+      {
+        "pair_id": "0012:000310",
+        "base_id": "0016:000050",
+        "target_text": "Rabbit gave dog a hurrying up sort of nudge."
+      },
+      {
+        "pair_id": "0012:000311",
+        "base_id": "0016:000059",
+        "target_text": "Zero four three a silver shilling is journey."
+      },
+      {
+        "pair_id": "0012:000328",
+        "base_id": "0016:000060",
+        "target_text": "That I am a born nurse."
+      },
+      {
+        "pair_id": "0012:000342",
+        "base_id": "0016:000077",
+        "target_text": "But I saw you walking."
+      },
+      {
+        "pair_id": "0016:000020",
+        "base_id": "0012:000046",
+        "target_text": "They'd never know I'd regular ran away."
+      },
+      {
+        "pair_id": "0016:000050",
+        "base_id": "0012:000109",
+        "target_text": "If they mother knew it."
+      },
+      {
+        "pair_id": "0016:000059",
+        "base_id": "0012:000110",
+        "target_text": "Act drop second act scene."
+      },
+      {
+        "pair_id": "0016:000060",
+        "base_id": "0012:000125",
+        "target_text": "To catch that bulrush root with my paw!"
+      },
+      {
+        "pair_id": "0016:000077",
+        "base_id": "0012:000127",
+        "target_text": "Cos I know I had some honey."
+      },
+      {
+        "pair_id": "0016:000100",
+        "base_id": "0012:000046",
+        "target_text": "They'd never know I'd regular ran away."
+      },
+      {
+        "pair_id": "0016:000118",
+        "base_id": "0012:000109",
+        "target_text": "If they mother knew it."
+      },
+      {
+        "pair_id": "0016:000127",
+        "base_id": "0012:000110",
+        "target_text": "Act drop second act scene."
+      },
+      {
+        "pair_id": "0016:000218",
+        "base_id": "0012:000125",
+        "target_text": "To catch that bulrush root with my paw!"
+      },
+      {
+        "pair_id": "0016:000222",
+        "base_id": "0012:000127",
+        "target_text": "Cos I know I had some honey."
+      },
+      {
+        "pair_id": "0016:000224",
+        "base_id": "0012:000046",
+        "target_text": "They'd never know I'd regular ran away."
+      },
+      {
+        "pair_id": "0016:000228",
+        "base_id": "0012:000109",
+        "target_text": "If they mother knew it."
+      },
+      {
+        "pair_id": "0016:000235",
+        "base_id": "0012:000110",
+        "target_text": "Act drop second act scene."
+      },
+      {
+        "pair_id": "0016:000246",
+        "base_id": "0012:000125",
+        "target_text": "To catch that bulrush root with my paw!"
+      },
+      {
+        "pair_id": "0016:000307",
+        "base_id": "0012:000127",
+        "target_text": "Cos I know I had some honey."
+      },
+      {
+        "pair_id": "0016:000314",
+        "base_id": "0012:000046",
+        "target_text": "They'd never know I'd regular ran away."
+      },
+      {
+        "pair_id": "0016:000332",
+        "base_id": "0012:000109",
+        "target_text": "If they mother knew it."
+      },
+      {
+        "pair_id": "0016:000338",
+        "base_id": "0012:000110",
+        "target_text": "Act drop second act scene."
+      },
+      {
+        "pair_id": "0016:000342",
+        "base_id": "0012:000125",
+        "target_text": "To catch that bulrush root with my paw!"
+      },
+      {
+        "pair_id": "0016:000343",
+        "base_id": "0012:000127",
+        "target_text": "Cos I know I had some honey."
+      }
+    ],
+    "seed": 42,
+    "alphas": [
+      0.5,
+      0.73,
+      0.75,
+      1.0,
+      1.25
+    ],
+    "generation_batch_rows": 32,
+    "isr_definition": "EOS-terminated fraction"
+  },
+  "snapshots": 1,
+  "candidate_count": 5,
+  "candidates": [
+    {
+      "artifacts": [
+        "final_transform.pt"
+      ],
+      "completed_updates": 45,
+      "transform_digest": "2a738c2712f39ea7",
+      "alpha": 0.5,
+      "metrics": {
+        "scored_pairs": 40,
+        "isr": 1.0,
+        "isr_control": 1.0,
+        "isr_degradation": 0.0,
+        "gate_isr": true,
+        "emotion_prob": 0.6426029205322266,
+        "emotion_prob_control": 0.47346964478492737,
+        "emotion_delta_mean": 0.16913330554962158,
+        "emotion_delta_ci": [
+          -0.004188227467238903,
+          0.3366432189941406
+        ],
+        "gate_emotion": false,
+        "speaker_sim": 0.8826969861984253,
+        "speaker_sim_control": 0.8750999569892883,
+        "speaker_degradation": -0.007597029209136963,
+        "gate_speaker_abs": true,
+        "gate_speaker_degradation": true,
+        "wer": {
+          "treated": {
+            "substitutions": 11,
+            "deletions": 0,
+            "insertions": 0,
+            "errors": 11,
+            "reference_words": 276,
+            "wer": 0.03985507246376811
+          },
+          "control": {
+            "substitutions": 13,
+            "deletions": 13,
+            "insertions": 0,
+            "errors": 26,
+            "reference_words": 276,
+            "wer": 0.09420289855072464
+          },
+          "delta": -0.05434782608695653,
+          "max_delta": 0.06,
+          "pass": true
+        },
+        "gate_wer": true,
+        "pass": false
+      }
+    },
+    {
+      "artifacts": [
+        "final_transform.pt"
+      ],
+      "completed_updates": 45,
+      "transform_digest": "2a738c2712f39ea7",
+      "alpha": 0.73,
+      "metrics": {
+        "scored_pairs": 40,
+        "isr": 1.0,
+        "isr_control": 1.0,
+        "isr_degradation": 0.0,
+        "gate_isr": true,
+        "emotion_prob": 0.7235438823699951,
+        "emotion_prob_control": 0.46202772855758667,
+        "emotion_delta_mean": 0.26151615381240845,
+        "emotion_delta_ci": [
+          0.07031981647014618,
+          0.43688729405403137
+        ],
+        "gate_emotion": true,
+        "speaker_sim": 0.8556641340255737,
+        "speaker_sim_control": 0.8631726503372192,
+        "speaker_degradation": 0.007508516311645508,
+        "gate_speaker_abs": true,
+        "gate_speaker_degradation": true,
+        "wer": {
+          "treated": {
+            "substitutions": 13,
+            "deletions": 9,
+            "insertions": 1,
+            "errors": 23,
+            "reference_words": 276,
+            "wer": 0.08333333333333333
+          },
+          "control": {
+            "substitutions": 13,
+            "deletions": 10,
+            "insertions": 0,
+            "errors": 23,
+            "reference_words": 276,
+            "wer": 0.08333333333333333
+          },
+          "delta": 0.0,
+          "max_delta": 0.06,
+          "pass": true
+        },
+        "gate_wer": true,
+        "pass": true
+      }
+    },
+    {
+      "artifacts": [
+        "final_transform.pt"
+      ],
+      "completed_updates": 45,
+      "transform_digest": "2a738c2712f39ea7",
+      "alpha": 0.75,
+      "metrics": {
+        "scored_pairs": 40,
+        "isr": 1.0,
+        "isr_control": 1.0,
+        "isr_degradation": 0.0,
+        "gate_isr": true,
+        "emotion_prob": 0.6915806531906128,
+        "emotion_prob_control": 0.5620385408401489,
+        "emotion_delta_mean": 0.12954215705394745,
+        "emotion_delta_ci": [
+          -0.04313705489039421,
+          0.2907419800758362
+        ],
+        "gate_emotion": false,
+        "speaker_sim": 0.8280895948410034,
+        "speaker_sim_control": 0.8642852902412415,
+        "speaker_degradation": 0.03619569540023804,
+        "gate_speaker_abs": false,
+        "gate_speaker_degradation": true,
+        "wer": {
+          "treated": {
+            "substitutions": 15,
+            "deletions": 18,
+            "insertions": 438,
+            "errors": 471,
+            "reference_words": 276,
+            "wer": 1.7065217391304348
+          },
+          "control": {
+            "substitutions": 13,
+            "deletions": 5,
+            "insertions": 2,
+            "errors": 20,
+            "reference_words": 276,
+            "wer": 0.07246376811594203
+          },
+          "delta": 1.6340579710144927,
+          "max_delta": 0.06,
+          "pass": false
+        },
+        "gate_wer": false,
+        "pass": false
+      }
+    },
+    {
+      "artifacts": [
+        "final_transform.pt"
+      ],
+      "completed_updates": 45,
+      "transform_digest": "2a738c2712f39ea7",
+      "alpha": 1.0,
+      "metrics": {
+        "scored_pairs": 40,
+        "isr": 1.0,
+        "isr_control": 1.0,
+        "isr_degradation": 0.0,
+        "gate_isr": true,
+        "emotion_prob": 0.5904233455657959,
+        "emotion_prob_control": 0.46236228942871094,
+        "emotion_delta_mean": 0.12806102633476257,
+        "emotion_delta_ci": [
+          -0.04527539387345314,
+          0.29262638092041016
+        ],
+        "gate_emotion": false,
+        "speaker_sim": 0.7857657074928284,
+        "speaker_sim_control": 0.8182188868522644,
+        "speaker_degradation": 0.032453179359436035,
+        "gate_speaker_abs": false,
+        "gate_speaker_degradation": true,
+        "wer": {
+          "treated": {
+            "substitutions": 36,
+            "deletions": 32,
+            "insertions": 2,
+            "errors": 70,
+            "reference_words": 276,
+            "wer": 0.2536231884057971
+          },
+          "control": {
+            "substitutions": 11,
+            "deletions": 22,
+            "insertions": 0,
+            "errors": 33,
+            "reference_words": 276,
+            "wer": 0.11956521739130435
+          },
+          "delta": 0.13405797101449277,
+          "max_delta": 0.06,
+          "pass": false
+        },
+        "gate_wer": false,
+        "pass": false
+      }
+    },
+    {
+      "artifacts": [
+        "final_transform.pt"
+      ],
+      "completed_updates": 45,
+      "transform_digest": "2a738c2712f39ea7",
+      "alpha": 1.25,
+      "metrics": {
+        "scored_pairs": 40,
+        "isr": 1.0,
+        "isr_control": 1.0,
+        "isr_degradation": 0.0,
+        "gate_isr": true,
+        "emotion_prob": 0.4403175413608551,
+        "emotion_prob_control": 0.44484788179397583,
+        "emotion_delta_mean": -0.004530373495072126,
+        "emotion_delta_ci": [
+          -0.1624453216791153,
+          0.15767920017242432
+        ],
+        "gate_emotion": false,
+        "speaker_sim": 0.7457056045532227,
+        "speaker_sim_control": 0.8040136098861694,
+        "speaker_degradation": 0.05830800533294678,
+        "gate_speaker_abs": false,
+        "gate_speaker_degradation": false,
+        "wer": {
+          "treated": {
+            "substitutions": 39,
+            "deletions": 66,
+            "insertions": 436,
+            "errors": 541,
+            "reference_words": 276,
+            "wer": 1.960144927536232
+          },
+          "control": {
+            "substitutions": 16,
+            "deletions": 36,
+            "insertions": 0,
+            "errors": 52,
+            "reference_words": 276,
+            "wer": 0.18840579710144928
+          },
+          "delta": 1.7717391304347827,
+          "max_delta": 0.06,
+          "pass": false
+        },
+        "gate_wer": false,
+        "pass": false
+      }
+    }
+  ],
+  "selection": {
+    "criterion": "maximum mean emotion-probability delta among candidates passing emotion, speaker, ISR, and WER gates",
+    "feasible": true,
+    "best": {
+      "artifacts": [
+        "final_transform.pt"
+      ],
+      "completed_updates": 45,
+      "transform_digest": "2a738c2712f39ea7",
+      "alpha": 0.73,
+      "metrics": {
+        "scored_pairs": 40,
+        "isr": 1.0,
+        "isr_control": 1.0,
+        "isr_degradation": 0.0,
+        "gate_isr": true,
+        "emotion_prob": 0.7235438823699951,
+        "emotion_prob_control": 0.46202772855758667,
+        "emotion_delta_mean": 0.26151615381240845,
+        "emotion_delta_ci": [
+          0.07031981647014618,
+          0.43688729405403137
+        ],
+        "gate_emotion": true,
+        "speaker_sim": 0.8556641340255737,
+        "speaker_sim_control": 0.8631726503372192,
+        "speaker_degradation": 0.007508516311645508,
+        "gate_speaker_abs": true,
+        "gate_speaker_degradation": true,
+        "wer": {
+          "treated": {
+            "substitutions": 13,
+            "deletions": 9,
+            "insertions": 1,
+            "errors": 23,
+            "reference_words": 276,
+            "wer": 0.08333333333333333
+          },
+          "control": {
+            "substitutions": 13,
+            "deletions": 10,
+            "insertions": 0,
+            "errors": 23,
+            "reference_words": 276,
+            "wer": 0.08333333333333333
+          },
+          "delta": 0.0,
+          "max_delta": 0.06,
+          "pass": true
+        },
+        "gate_wer": true,
+        "pass": true
+      }
+    },
+    "best_observed": {
+      "artifacts": [
+        "final_transform.pt"
+      ],
+      "completed_updates": 45,
+      "transform_digest": "2a738c2712f39ea7",
+      "alpha": 0.73,
+      "metrics": {
+        "scored_pairs": 40,
+        "isr": 1.0,
+        "isr_control": 1.0,
+        "isr_degradation": 0.0,
+        "gate_isr": true,
+        "emotion_prob": 0.7235438823699951,
+        "emotion_prob_control": 0.46202772855758667,
+        "emotion_delta_mean": 0.26151615381240845,
+        "emotion_delta_ci": [
+          0.07031981647014618,
+          0.43688729405403137
+        ],
+        "gate_emotion": true,
+        "speaker_sim": 0.8556641340255737,
+        "speaker_sim_control": 0.8631726503372192,
+        "speaker_degradation": 0.007508516311645508,
+        "gate_speaker_abs": true,
+        "gate_speaker_degradation": true,
+        "wer": {
+          "treated": {
+            "substitutions": 13,
+            "deletions": 9,
+            "insertions": 1,
+            "errors": 23,
+            "reference_words": 276,
+            "wer": 0.08333333333333333
+          },
+          "control": {
+            "substitutions": 13,
+            "deletions": 10,
+            "insertions": 0,
+            "errors": 23,
+            "reference_words": 276,
+            "wer": 0.08333333333333333
+          },
+          "delta": 0.0,
+          "max_delta": 0.06,
+          "pass": true
+        },
+        "gate_wer": true,
+        "pass": true
+      }
+    }
+  },
+  "wer_contract": {
+    "enabled": true,
+    "model_id": "openai/whisper-large-v3-turbo",
+    "revision": "41f01f3fe87f28c78e2fbf8b568835947dd65ed9",
+    "max_absolute_degradation": 0.06,
+    "min_reference_words": 100,
+    "configured_full_panel_min_reference_words": 100,
+    "provisional_screen": false,
+    "comparison": "matched raw-vector control at the same alpha"
+  }
+}

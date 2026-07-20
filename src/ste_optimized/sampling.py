@@ -6,7 +6,10 @@ Per plan §3/§4:
   resampled every epoch (rotation), so coverage of the ~|bases| eligible bases
   accumulates across epochs;
 - fully deterministic given (seed, epoch, update);
-- state (epoch, cursor) lives in the training checkpoint.
+- incomplete epoch tails are carried into the next epoch so every optimizer
+  update keeps the configured K contrasts (without duplicating a contrast
+  inside a boundary-spanning batch);
+- state (epoch, cursor, current order) lives in the training checkpoint.
 """
 
 from __future__ import annotations
@@ -51,6 +54,13 @@ class BatchSampler:
         self.bases = bases
         self.K = contrasts_per_update
         self.M = bases_per_contrast
+        if self.K < 1 or self.M < 1:
+            raise ValueError("K and M must be positive")
+        if len(self.pool) < self.K:
+            raise ValueError(
+                f"only {len(self.pool)} qualified contrasts; need K={self.K} "
+                "to form a full update"
+            )
         self.seed = seed
         self.epoch = 0
         self.cursor = 0
@@ -90,16 +100,37 @@ class BatchSampler:
         if self.cursor >= len(self._order):
             self.epoch += 1
             self._reshuffle()
-        take = self._order[self.cursor:self.cursor + self.K]
+        batch_epoch = self.epoch
         update_in_epoch = self.cursor // self.K
-        self.cursor += len(take)
+
+        # Fill the update across an epoch boundary instead of emitting a tiny
+        # tail batch.  When the new epoch happens to place an old-tail item in
+        # its prefix, move that item later in the new epoch; this retains
+        # without-replacement coverage and K distinct contrasts in the update.
+        take: list[tuple[int, int]] = []
+        while len(take) < self.K:
+            if self.cursor >= len(self._order):
+                blocked = {idx for idx, _epoch in take}
+                self.epoch += 1
+                self._reshuffle()
+                if blocked:
+                    self._order = (
+                        [idx for idx in self._order if idx not in blocked]
+                        + [idx for idx in self._order if idx in blocked]
+                    )
+            count = min(self.K - len(take), len(self._order) - self.cursor)
+            take.extend(
+                (idx, self.epoch)
+                for idx in self._order[self.cursor:self.cursor + count]
+            )
+            self.cursor += count
 
         contrast_ids, vectors, weights, rows, row_contrast = [], [], [], [], []
-        for slot, idx in enumerate(take):
+        for slot, (idx, contrast_epoch) in enumerate(take):
             c = self.pool[idx]
             speaker = c["pair_id"].split(":")[0]
             elig = self._eligible_bases(speaker)
-            g = _rng(self.seed, "bases", self.epoch, c["pair_id"])
+            g = _rng(self.seed, "bases", contrast_epoch, c["pair_id"])
             perm = torch.randperm(len(elig), generator=g)[: self.M]
             contrast_ids.append(c["pair_id"])
             vectors.append(c["v"].to(torch.float32))
@@ -114,12 +145,26 @@ class BatchSampler:
         return UpdateBatch(
             contrast_ids=contrast_ids, vectors=torch.stack(vectors),
             weights=weights, rows=rows, row_contrast=row_contrast,
-            epoch=self.epoch, update_in_epoch=update_in_epoch)
+            epoch=batch_epoch, update_in_epoch=update_in_epoch)
 
     def state_dict(self) -> dict:
-        return {"epoch": self.epoch, "cursor": self.cursor}
+        return {
+            "epoch": self.epoch,
+            "cursor": self.cursor,
+            # Boundary batches may stably move duplicate candidates later in
+            # an epoch.  Persisting the resulting order is required for exact
+            # resume parity.
+            "order": list(self._order),
+        }
 
     def load_state_dict(self, state: dict) -> None:
         self.epoch = int(state["epoch"])
         self._reshuffle()
+        if "order" in state:
+            order = [int(index) for index in state["order"]]
+            if sorted(order) != list(range(len(self.pool))):
+                raise ValueError("sampler checkpoint order does not match pool")
+            self._order = order
         self.cursor = int(state["cursor"])
+        if not 0 <= self.cursor <= len(self._order):
+            raise ValueError("sampler checkpoint cursor is out of range")

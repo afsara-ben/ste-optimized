@@ -117,13 +117,30 @@ class DistributedConfig:
 
 
 @dataclass
+class ASRConfig:
+    """Frozen Whisper objective and decoded-WER acceptance contract."""
+
+    enabled: bool = True
+    model_id: str = "openai/whisper-large-v3-turbo"
+    revision: str = "41f01f3fe87f28c78e2fbf8b568835947dd65ed9"
+    dtype: str = "float16"
+    language: str = "english"
+    task: str = "transcribe"
+    loss_weight: float = 0.2
+    max_wer_degradation: float = 0.06
+    min_validation_reference_words: int = 100
+
+
+@dataclass
 class EvalConfig:
     panel_seeds: int = 1
     alphas: tuple[float, ...] = (0.5, 0.75, 1.0, 1.25, 1.5)
     cadence_rows: int = 12          # small fixed panel evaluated during training
+    # Bound native Qwen generation and all expert scoring batches.  The full
+    # validation set can exceed the safe batch size even when training does not.
+    generation_batch_rows: int = 32
     control_cache_dir: str = "runs/control-cache"
-    compute_wer: bool = False       # whisper download on first use
-    whisper_model: str = "openai/whisper-large-v3-turbo"
+    compute_wer: bool = True
 
 
 @dataclass
@@ -133,6 +150,7 @@ class ExperimentConfig:
     data: DataConfig = field(default_factory=DataConfig)
     train: TrainConfig = field(default_factory=TrainConfig)
     distributed: DistributedConfig = field(default_factory=DistributedConfig)
+    asr: ASRConfig = field(default_factory=ASRConfig)
     eval: EvalConfig = field(default_factory=EvalConfig)
 
     def to_dict(self) -> dict[str, Any]:
@@ -159,6 +177,7 @@ def load_config(path: str | Path) -> ExperimentConfig:
         "data": DataConfig,
         "train": TrainConfig,
         "distributed": DistributedConfig,
+        "asr": ASRConfig,
         "eval": EvalConfig,
     }
     kwargs = {}

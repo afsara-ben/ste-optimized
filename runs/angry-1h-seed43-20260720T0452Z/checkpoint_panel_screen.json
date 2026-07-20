@@ -1,0 +1,2764 @@
+{
+  "schema": "ste-optimized/checkpoint-panel/v1",
+  "run_dir": "/data/home/hys4qm/ste-optimized/runs/angry-1h-seed43-20260720T0452Z",
+  "panel": {
+    "split": "validation",
+    "mode": "provisional_screen",
+    "hash": "659e38d87560b614",
+    "rows": 12,
+    "requested_rows": 12,
+    "items": [
+      {
+        "pair_id": "0012:000046",
+        "base_id": "0016:000020",
+        "target_text": "At the roots-of a bush of a grass."
+      },
+      {
+        "pair_id": "0016:000020",
+        "base_id": "0012:000046",
+        "target_text": "They'd never know I'd regular ran away."
+      },
+      {
+        "pair_id": "0012:000109",
+        "base_id": "0016:000050",
+        "target_text": "Rabbit gave dog a hurrying up sort of nudge."
+      },
+      {
+        "pair_id": "0016:000050",
+        "base_id": "0012:000109",
+        "target_text": "If they mother knew it."
+      },
+      {
+        "pair_id": "0012:000110",
+        "base_id": "0016:000059",
+        "target_text": "Zero four three a silver shilling is journey."
+      },
+      {
+        "pair_id": "0016:000059",
+        "base_id": "0012:000110",
+        "target_text": "Act drop second act scene."
+      },
+      {
+        "pair_id": "0012:000125",
+        "base_id": "0016:000060",
+        "target_text": "That I am a born nurse."
+      },
+      {
+        "pair_id": "0016:000060",
+        "base_id": "0012:000125",
+        "target_text": "To catch that bulrush root with my paw!"
+      },
+      {
+        "pair_id": "0012:000127",
+        "base_id": "0016:000077",
+        "target_text": "But I saw you walking."
+      },
+      {
+        "pair_id": "0016:000077",
+        "base_id": "0012:000127",
+        "target_text": "Cos I know I had some honey."
+      },
+      {
+        "pair_id": "0012:000153",
+        "base_id": "0016:000020",
+        "target_text": "At the roots-of a bush of a grass."
+      },
+      {
+        "pair_id": "0016:000100",
+        "base_id": "0012:000046",
+        "target_text": "They'd never know I'd regular ran away."
+      }
+    ],
+    "seed": 42,
+    "alphas": [
+      0.5,
+      0.73,
+      0.75,
+      1.0,
+      1.25
+    ],
+    "generation_batch_rows": 32,
+    "isr_definition": "EOS-terminated fraction"
+  },
+  "snapshots": 10,
+  "candidate_count": 50,
+  "candidates": [
+    {
+      "artifacts": [
+        "checkpoints/transform-00005.pt"
+      ],
+      "completed_updates": 5,
+      "transform_digest": "01af59292ca88a02",
+      "alpha": 0.5,
+      "metrics": {
+        "scored_pairs": 12,
+        "isr": 1.0,
+        "isr_control": 1.0,
+        "isr_degradation": 0.0,
+        "gate_isr": true,
+        "emotion_prob": 0.4353697597980499,
+        "emotion_prob_control": 0.5550051331520081,
+        "emotion_delta_mean": -0.11963532119989395,
+        "emotion_delta_ci": [
+          -0.41235703229904175,
+          0.1574307531118393
+        ],
+        "gate_emotion": false,
+        "speaker_sim": 0.9071542620658875,
+        "speaker_sim_control": 0.917302668094635,
+        "speaker_degradation": 0.010148406028747559,
+        "gate_speaker_abs": true,
+        "gate_speaker_degradation": true,
+        "wer": {
+          "treated": {
+            "substitutions": 2,
+            "deletions": 0,
+            "insertions": 0,
+            "errors": 2,
+            "reference_words": 87,
+            "wer": 0.022988505747126436
+          },
+          "control": {
+            "substitutions": 2,
+            "deletions": 0,
+            "insertions": 0,
+            "errors": 2,
+            "reference_words": 87,
+            "wer": 0.022988505747126436
+          },
+          "delta": 0.0,
+          "max_delta": 0.06,
+          "pass": true
+        },
+        "gate_wer": true,
+        "pass": false
+      }
+    },
+    {
+      "artifacts": [
+        "checkpoints/transform-00005.pt"
+      ],
+      "completed_updates": 5,
+      "transform_digest": "01af59292ca88a02",
+      "alpha": 0.73,
+      "metrics": {
+        "scored_pairs": 12,
+        "isr": 1.0,
+        "isr_control": 1.0,
+        "isr_degradation": 0.0,
+        "gate_isr": true,
+        "emotion_prob": 0.5198199152946472,
+        "emotion_prob_control": 0.520481526851654,
+        "emotion_delta_mean": -0.0006616194732487202,
+        "emotion_delta_ci": [
+          -0.2758358120918274,
+          0.2699664533138275
+        ],
+        "gate_emotion": false,
+        "speaker_sim": 0.877469003200531,
+        "speaker_sim_control": 0.8941373229026794,
+        "speaker_degradation": 0.016668319702148438,
+        "gate_speaker_abs": true,
+        "gate_speaker_degradation": true,
+        "wer": {
+          "treated": {
+            "substitutions": 3,
+            "deletions": 0,
+            "insertions": 0,
+            "errors": 3,
+            "reference_words": 87,
+            "wer": 0.034482758620689655
+          },
+          "control": {
+            "substitutions": 2,
+            "deletions": 0,
+            "insertions": 0,
+            "errors": 2,
+            "reference_words": 87,
+            "wer": 0.022988505747126436
+          },
+          "delta": 0.011494252873563218,
+          "max_delta": 0.06,
+          "pass": true
+        },
+        "gate_wer": true,
+        "pass": false
+      }
+    },
+    {
+      "artifacts": [
+        "checkpoints/transform-00005.pt"
+      ],
+      "completed_updates": 5,
+      "transform_digest": "01af59292ca88a02",
+      "alpha": 0.75,
+      "metrics": {
+        "scored_pairs": 12,
+        "isr": 1.0,
+        "isr_control": 1.0,
+        "isr_degradation": 0.0,
+        "gate_isr": true,
+        "emotion_prob": 0.5832750797271729,
+        "emotion_prob_control": 0.5006954073905945,
+        "emotion_delta_mean": 0.08257967233657837,
+        "emotion_delta_ci": [
+          -0.3363324999809265,
+          0.49907493591308594
+        ],
+        "gate_emotion": false,
+        "speaker_sim": 0.8765438199043274,
+        "speaker_sim_control": 0.8899702429771423,
+        "speaker_degradation": 0.013426423072814941,
+        "gate_speaker_abs": true,
+        "gate_speaker_degradation": true,
+        "wer": {
+          "treated": {
+            "substitutions": 2,
+            "deletions": 0,
+            "insertions": 0,
+            "errors": 2,
+            "reference_words": 87,
+            "wer": 0.022988505747126436
+          },
+          "control": {
+            "substitutions": 4,
+            "deletions": 0,
+            "insertions": 1,
+            "errors": 5,
+            "reference_words": 87,
+            "wer": 0.05747126436781609
+          },
+          "delta": -0.034482758620689655,
+          "max_delta": 0.06,
+          "pass": true
+        },
+        "gate_wer": true,
+        "pass": false
+      }
+    },
+    {
+      "artifacts": [
+        "checkpoints/transform-00005.pt"
+      ],
+      "completed_updates": 5,
+      "transform_digest": "01af59292ca88a02",
+      "alpha": 1.0,
+      "metrics": {
+        "scored_pairs": 12,
+        "isr": 1.0,
+        "isr_control": 1.0,
+        "isr_degradation": 0.0,
+        "gate_isr": true,
+        "emotion_prob": 0.3526359796524048,
+        "emotion_prob_control": 0.5040663480758667,
+        "emotion_delta_mean": -0.1514303982257843,
+        "emotion_delta_ci": [
+          -0.3940744996070862,
+          0.09251166135072708
+        ],
+        "gate_emotion": false,
+        "speaker_sim": 0.8361494541168213,
+        "speaker_sim_control": 0.8510237336158752,
+        "speaker_degradation": 0.014874279499053955,
+        "gate_speaker_abs": false,
+        "gate_speaker_degradation": true,
+        "wer": {
+          "treated": {
+            "substitutions": 6,
+            "deletions": 7,
+            "insertions": 1,
+            "errors": 14,
+            "reference_words": 87,
+            "wer": 0.16091954022988506
+          },
+          "control": {
+            "substitutions": 3,
+            "deletions": 1,
+            "insertions": 0,
+            "errors": 4,
+            "reference_words": 87,
+            "wer": 0.04597701149425287
+          },
+          "delta": 0.11494252873563218,
+          "max_delta": 0.06,
+          "pass": false
+        },
+        "gate_wer": false,
+        "pass": false
+      }
+    },
+    {
+      "artifacts": [
+        "checkpoints/transform-00005.pt"
+      ],
+      "completed_updates": 5,
+      "transform_digest": "01af59292ca88a02",
+      "alpha": 1.25,
+      "metrics": {
+        "scored_pairs": 12,
+        "isr": 1.0,
+        "isr_control": 1.0,
+        "isr_degradation": 0.0,
+        "gate_isr": true,
+        "emotion_prob": 0.39717039465904236,
+        "emotion_prob_control": 0.07077229768037796,
+        "emotion_delta_mean": 0.326398104429245,
+        "emotion_delta_ci": [
+          0.02861829474568367,
+          0.6227372288703918
+        ],
+        "gate_emotion": true,
+        "speaker_sim": 0.7613477110862732,
+        "speaker_sim_control": 0.7981751561164856,
+        "speaker_degradation": 0.0368274450302124,
+        "gate_speaker_abs": false,
+        "gate_speaker_degradation": true,
+        "wer": {
+          "treated": {
+            "substitutions": 10,
+            "deletions": 9,
+            "insertions": 0,
+            "errors": 19,
+            "reference_words": 87,
+            "wer": 0.21839080459770116
+          },
+          "control": {
+            "substitutions": 5,
+            "deletions": 12,
+            "insertions": 0,
+            "errors": 17,
+            "reference_words": 87,
+            "wer": 0.19540229885057472
+          },
+          "delta": 0.022988505747126436,
+          "max_delta": 0.06,
+          "pass": true
+        },
+        "gate_wer": true,
+        "pass": false
+      }
+    },
+    {
+      "artifacts": [
+        "checkpoints/transform-00010.pt"
+      ],
+      "completed_updates": 10,
+      "transform_digest": "324a6c93c16ca205",
+      "alpha": 0.5,
+      "metrics": {
+        "scored_pairs": 12,
+        "isr": 1.0,
+        "isr_control": 1.0,
+        "isr_degradation": 0.0,
+        "gate_isr": true,
+        "emotion_prob": 0.6546364426612854,
+        "emotion_prob_control": 0.5550051331520081,
+        "emotion_delta_mean": 0.09963134676218033,
+        "emotion_delta_ci": [
+          -0.3011763393878937,
+          0.47214236855506897
+        ],
+        "gate_emotion": false,
+        "speaker_sim": 0.9117193818092346,
+        "speaker_sim_control": 0.917302668094635,
+        "speaker_degradation": 0.005583286285400391,
+        "gate_speaker_abs": true,
+        "gate_speaker_degradation": true,
+        "wer": {
+          "treated": {
+            "substitutions": 2,
+            "deletions": 0,
+            "insertions": 0,
+            "errors": 2,
+            "reference_words": 87,
+            "wer": 0.022988505747126436
+          },
+          "control": {
+            "substitutions": 2,
+            "deletions": 0,
+            "insertions": 0,
+            "errors": 2,
+            "reference_words": 87,
+            "wer": 0.022988505747126436
+          },
+          "delta": 0.0,
+          "max_delta": 0.06,
+          "pass": true
+        },
+        "gate_wer": true,
+        "pass": false
+      }
+    },
+    {
+      "artifacts": [
+        "checkpoints/transform-00010.pt"
+      ],
+      "completed_updates": 10,
+      "transform_digest": "324a6c93c16ca205",
+      "alpha": 0.73,
+      "metrics": {
+        "scored_pairs": 12,
+        "isr": 1.0,
+        "isr_control": 1.0,
+        "isr_degradation": 0.0,
+        "gate_isr": true,
+        "emotion_prob": 0.5244784355163574,
+        "emotion_prob_control": 0.520481526851654,
+        "emotion_delta_mean": 0.003996914718300104,
+        "emotion_delta_ci": [
+          -0.2715527415275574,
+          0.27816295623779297
+        ],
+        "gate_emotion": false,
+        "speaker_sim": 0.89274662733078,
+        "speaker_sim_control": 0.8941373229026794,
+        "speaker_degradation": 0.001390695571899414,
+        "gate_speaker_abs": true,
+        "gate_speaker_degradation": true,
+        "wer": {
+          "treated": {
+            "substitutions": 2,
+            "deletions": 0,
+            "insertions": 0,
+            "errors": 2,
+            "reference_words": 87,
+            "wer": 0.022988505747126436
+          },
+          "control": {
+            "substitutions": 2,
+            "deletions": 0,
+            "insertions": 0,
+            "errors": 2,
+            "reference_words": 87,
+            "wer": 0.022988505747126436
+          },
+          "delta": 0.0,
+          "max_delta": 0.06,
+          "pass": true
+        },
+        "gate_wer": true,
+        "pass": false
+      }
+    },
+    {
+      "artifacts": [
+        "checkpoints/transform-00010.pt"
+      ],
+      "completed_updates": 10,
+      "transform_digest": "324a6c93c16ca205",
+      "alpha": 0.75,
+      "metrics": {
+        "scored_pairs": 12,
+        "isr": 1.0,
+        "isr_control": 1.0,
+        "isr_degradation": 0.0,
+        "gate_isr": true,
+        "emotion_prob": 0.7049939036369324,
+        "emotion_prob_control": 0.5006954073905945,
+        "emotion_delta_mean": 0.2042984962463379,
+        "emotion_delta_ci": [
+          -0.1294230818748474,
+          0.5721568465232849
+        ],
+        "gate_emotion": false,
+        "speaker_sim": 0.8780639171600342,
+        "speaker_sim_control": 0.8899702429771423,
+        "speaker_degradation": 0.011906325817108154,
+        "gate_speaker_abs": true,
+        "gate_speaker_degradation": true,
+        "wer": {
+          "treated": {
+            "substitutions": 1,
+            "deletions": 0,
+            "insertions": 0,
+            "errors": 1,
+            "reference_words": 87,
+            "wer": 0.011494252873563218
+          },
+          "control": {
+            "substitutions": 4,
+            "deletions": 0,
+            "insertions": 1,
+            "errors": 5,
+            "reference_words": 87,
+            "wer": 0.05747126436781609
+          },
+          "delta": -0.04597701149425287,
+          "max_delta": 0.06,
+          "pass": true
+        },
+        "gate_wer": true,
+        "pass": false
+      }
+    },
+    {
+      "artifacts": [
+        "checkpoints/transform-00010.pt"
+      ],
+      "completed_updates": 10,
+      "transform_digest": "324a6c93c16ca205",
+      "alpha": 1.0,
+      "metrics": {
+        "scored_pairs": 12,
+        "isr": 1.0,
+        "isr_control": 1.0,
+        "isr_degradation": 0.0,
+        "gate_isr": true,
+        "emotion_prob": 0.4194210469722748,
+        "emotion_prob_control": 0.5040663480758667,
+        "emotion_delta_mean": -0.08464530855417252,
+        "emotion_delta_ci": [
+          -0.41760194301605225,
+          0.2542814612388611
+        ],
+        "gate_emotion": false,
+        "speaker_sim": 0.8371825814247131,
+        "speaker_sim_control": 0.8510237336158752,
+        "speaker_degradation": 0.01384115219116211,
+        "gate_speaker_abs": false,
+        "gate_speaker_degradation": true,
+        "wer": {
+          "treated": {
+            "substitutions": 3,
+            "deletions": 1,
+            "insertions": 0,
+            "errors": 4,
+            "reference_words": 87,
+            "wer": 0.04597701149425287
+          },
+          "control": {
+            "substitutions": 3,
+            "deletions": 1,
+            "insertions": 0,
+            "errors": 4,
+            "reference_words": 87,
+            "wer": 0.04597701149425287
+          },
+          "delta": 0.0,
+          "max_delta": 0.06,
+          "pass": true
+        },
+        "gate_wer": true,
+        "pass": false
+      }
+    },
+    {
+      "artifacts": [
+        "checkpoints/transform-00010.pt"
+      ],
+      "completed_updates": 10,
+      "transform_digest": "324a6c93c16ca205",
+      "alpha": 1.25,
+      "metrics": {
+        "scored_pairs": 12,
+        "isr": 1.0,
+        "isr_control": 1.0,
+        "isr_degradation": 0.0,
+        "gate_isr": true,
+        "emotion_prob": 0.48060059547424316,
+        "emotion_prob_control": 0.07077229768037796,
+        "emotion_delta_mean": 0.4098283350467682,
+        "emotion_delta_ci": [
+          0.17508074641227722,
+          0.6891266107559204
+        ],
+        "gate_emotion": true,
+        "speaker_sim": 0.7650046944618225,
+        "speaker_sim_control": 0.7981751561164856,
+        "speaker_degradation": 0.033170461654663086,
+        "gate_speaker_abs": false,
+        "gate_speaker_degradation": true,
+        "wer": {
+          "treated": {
+            "substitutions": 9,
+            "deletions": 14,
+            "insertions": 6,
+            "errors": 29,
+            "reference_words": 87,
+            "wer": 0.3333333333333333
+          },
+          "control": {
+            "substitutions": 5,
+            "deletions": 12,
+            "insertions": 0,
+            "errors": 17,
+            "reference_words": 87,
+            "wer": 0.19540229885057472
+          },
+          "delta": 0.1379310344827586,
+          "max_delta": 0.06,
+          "pass": false
+        },
+        "gate_wer": false,
+        "pass": false
+      }
+    },
+    {
+      "artifacts": [
+        "checkpoints/transform-00015.pt"
+      ],
+      "completed_updates": 15,
+      "transform_digest": "80aa6e4f2ae52c3d",
+      "alpha": 0.5,
+      "metrics": {
+        "scored_pairs": 12,
+        "isr": 1.0,
+        "isr_control": 1.0,
+        "isr_degradation": 0.0,
+        "gate_isr": true,
+        "emotion_prob": 0.5826093554496765,
+        "emotion_prob_control": 0.5550051331520081,
+        "emotion_delta_mean": 0.027604246512055397,
+        "emotion_delta_ci": [
+          -0.31302410364151,
+          0.3375161588191986
+        ],
+        "gate_emotion": false,
+        "speaker_sim": 0.9008851647377014,
+        "speaker_sim_control": 0.917302668094635,
+        "speaker_degradation": 0.016417503356933594,
+        "gate_speaker_abs": true,
+        "gate_speaker_degradation": true,
+        "wer": {
+          "treated": {
+            "substitutions": 3,
+            "deletions": 0,
+            "insertions": 0,
+            "errors": 3,
+            "reference_words": 87,
+            "wer": 0.034482758620689655
+          },
+          "control": {
+            "substitutions": 2,
+            "deletions": 0,
+            "insertions": 0,
+            "errors": 2,
+            "reference_words": 87,
+            "wer": 0.022988505747126436
+          },
+          "delta": 0.011494252873563218,
+          "max_delta": 0.06,
+          "pass": true
+        },
+        "gate_wer": true,
+        "pass": false
+      }
+    },
+    {
+      "artifacts": [
+        "checkpoints/transform-00015.pt"
+      ],
+      "completed_updates": 15,
+      "transform_digest": "80aa6e4f2ae52c3d",
+      "alpha": 0.73,
+      "metrics": {
+        "scored_pairs": 12,
+        "isr": 1.0,
+        "isr_control": 1.0,
+        "isr_degradation": 0.0,
+        "gate_isr": true,
+        "emotion_prob": 0.7186028957366943,
+        "emotion_prob_control": 0.520481526851654,
+        "emotion_delta_mean": 0.19812138378620148,
+        "emotion_delta_ci": [
+          -0.08461907505989075,
+          0.473303884267807
+        ],
+        "gate_emotion": false,
+        "speaker_sim": 0.8552928566932678,
+        "speaker_sim_control": 0.8941373229026794,
+        "speaker_degradation": 0.03884446620941162,
+        "gate_speaker_abs": true,
+        "gate_speaker_degradation": true,
+        "wer": {
+          "treated": {
+            "substitutions": 3,
+            "deletions": 7,
+            "insertions": 0,
+            "errors": 10,
+            "reference_words": 87,
+            "wer": 0.11494252873563218
+          },
+          "control": {
+            "substitutions": 2,
+            "deletions": 0,
+            "insertions": 0,
+            "errors": 2,
+            "reference_words": 87,
+            "wer": 0.022988505747126436
+          },
+          "delta": 0.09195402298850575,
+          "max_delta": 0.06,
+          "pass": false
+        },
+        "gate_wer": false,
+        "pass": false
+      }
+    },
+    {
+      "artifacts": [
+        "checkpoints/transform-00015.pt"
+      ],
+      "completed_updates": 15,
+      "transform_digest": "80aa6e4f2ae52c3d",
+      "alpha": 0.75,
+      "metrics": {
+        "scored_pairs": 12,
+        "isr": 1.0,
+        "isr_control": 1.0,
+        "isr_degradation": 0.0,
+        "gate_isr": true,
+        "emotion_prob": 0.6735289096832275,
+        "emotion_prob_control": 0.5006954073905945,
+        "emotion_delta_mean": 0.1728333979845047,
+        "emotion_delta_ci": [
+          -0.19026783108711243,
+          0.5403664708137512
+        ],
+        "gate_emotion": false,
+        "speaker_sim": 0.851595401763916,
+        "speaker_sim_control": 0.8899702429771423,
+        "speaker_degradation": 0.03837484121322632,
+        "gate_speaker_abs": true,
+        "gate_speaker_degradation": true,
+        "wer": {
+          "treated": {
+            "substitutions": 4,
+            "deletions": 1,
+            "insertions": 0,
+            "errors": 5,
+            "reference_words": 87,
+            "wer": 0.05747126436781609
+          },
+          "control": {
+            "substitutions": 4,
+            "deletions": 0,
+            "insertions": 1,
+            "errors": 5,
+            "reference_words": 87,
+            "wer": 0.05747126436781609
+          },
+          "delta": 0.0,
+          "max_delta": 0.06,
+          "pass": true
+        },
+        "gate_wer": true,
+        "pass": false
+      }
+    },
+    {
+      "artifacts": [
+        "checkpoints/transform-00015.pt"
+      ],
+      "completed_updates": 15,
+      "transform_digest": "80aa6e4f2ae52c3d",
+      "alpha": 1.0,
+      "metrics": {
+        "scored_pairs": 12,
+        "isr": 1.0,
+        "isr_control": 1.0,
+        "isr_degradation": 0.0,
+        "gate_isr": true,
+        "emotion_prob": 0.5604555010795593,
+        "emotion_prob_control": 0.5040663480758667,
+        "emotion_delta_mean": 0.05638913810253143,
+        "emotion_delta_ci": [
+          -0.29540231823921204,
+          0.40794381499290466
+        ],
+        "gate_emotion": false,
+        "speaker_sim": 0.8789730072021484,
+        "speaker_sim_control": 0.8510237336158752,
+        "speaker_degradation": -0.027949273586273193,
+        "gate_speaker_abs": true,
+        "gate_speaker_degradation": true,
+        "wer": {
+          "treated": {
+            "substitutions": 4,
+            "deletions": 1,
+            "insertions": 0,
+            "errors": 5,
+            "reference_words": 87,
+            "wer": 0.05747126436781609
+          },
+          "control": {
+            "substitutions": 3,
+            "deletions": 1,
+            "insertions": 0,
+            "errors": 4,
+            "reference_words": 87,
+            "wer": 0.04597701149425287
+          },
+          "delta": 0.011494252873563218,
+          "max_delta": 0.06,
+          "pass": true
+        },
+        "gate_wer": true,
+        "pass": false
+      }
+    },
+    {
+      "artifacts": [
+        "checkpoints/transform-00015.pt"
+      ],
+      "completed_updates": 15,
+      "transform_digest": "80aa6e4f2ae52c3d",
+      "alpha": 1.25,
+      "metrics": {
+        "scored_pairs": 12,
+        "isr": 1.0,
+        "isr_control": 1.0,
+        "isr_degradation": 0.0,
+        "gate_isr": true,
+        "emotion_prob": 0.5365729331970215,
+        "emotion_prob_control": 0.07077229768037796,
+        "emotion_delta_mean": 0.4658006727695465,
+        "emotion_delta_ci": [
+          0.17634055018424988,
+          0.7485151886940002
+        ],
+        "gate_emotion": true,
+        "speaker_sim": 0.81028151512146,
+        "speaker_sim_control": 0.7981751561164856,
+        "speaker_degradation": -0.012106359004974365,
+        "gate_speaker_abs": false,
+        "gate_speaker_degradation": true,
+        "wer": {
+          "treated": {
+            "substitutions": 6,
+            "deletions": 11,
+            "insertions": 1,
+            "errors": 18,
+            "reference_words": 87,
+            "wer": 0.20689655172413793
+          },
+          "control": {
+            "substitutions": 5,
+            "deletions": 12,
+            "insertions": 0,
+            "errors": 17,
+            "reference_words": 87,
+            "wer": 0.19540229885057472
+          },
+          "delta": 0.011494252873563204,
+          "max_delta": 0.06,
+          "pass": true
+        },
+        "gate_wer": true,
+        "pass": false
+      }
+    },
+    {
+      "artifacts": [
+        "checkpoints/transform-00020.pt"
+      ],
+      "completed_updates": 20,
+      "transform_digest": "b239b813e78a0140",
+      "alpha": 0.5,
+      "metrics": {
+        "scored_pairs": 12,
+        "isr": 1.0,
+        "isr_control": 1.0,
+        "isr_degradation": 0.0,
+        "gate_isr": true,
+        "emotion_prob": 0.5250454545021057,
+        "emotion_prob_control": 0.5550051331520081,
+        "emotion_delta_mean": -0.029959678649902344,
+        "emotion_delta_ci": [
+          -0.38122305274009705,
+          0.2999890446662903
+        ],
+        "gate_emotion": false,
+        "speaker_sim": 0.8991587162017822,
+        "speaker_sim_control": 0.917302668094635,
+        "speaker_degradation": 0.018143951892852783,
+        "gate_speaker_abs": true,
+        "gate_speaker_degradation": true,
+        "wer": {
+          "treated": {
+            "substitutions": 2,
+            "deletions": 0,
+            "insertions": 0,
+            "errors": 2,
+            "reference_words": 87,
+            "wer": 0.022988505747126436
+          },
+          "control": {
+            "substitutions": 2,
+            "deletions": 0,
+            "insertions": 0,
+            "errors": 2,
+            "reference_words": 87,
+            "wer": 0.022988505747126436
+          },
+          "delta": 0.0,
+          "max_delta": 0.06,
+          "pass": true
+        },
+        "gate_wer": true,
+        "pass": false
+      }
+    },
+    {
+      "artifacts": [
+        "checkpoints/transform-00020.pt"
+      ],
+      "completed_updates": 20,
+      "transform_digest": "b239b813e78a0140",
+      "alpha": 0.73,
+      "metrics": {
+        "scored_pairs": 12,
+        "isr": 1.0,
+        "isr_control": 1.0,
+        "isr_degradation": 0.0,
+        "gate_isr": true,
+        "emotion_prob": 0.780472993850708,
+        "emotion_prob_control": 0.520481526851654,
+        "emotion_delta_mean": 0.25999149680137634,
+        "emotion_delta_ci": [
+          -0.10363055765628815,
+          0.6108320951461792
+        ],
+        "gate_emotion": false,
+        "speaker_sim": 0.8882153630256653,
+        "speaker_sim_control": 0.8941373229026794,
+        "speaker_degradation": 0.00592195987701416,
+        "gate_speaker_abs": true,
+        "gate_speaker_degradation": true,
+        "wer": {
+          "treated": {
+            "substitutions": 3,
+            "deletions": 0,
+            "insertions": 0,
+            "errors": 3,
+            "reference_words": 87,
+            "wer": 0.034482758620689655
+          },
+          "control": {
+            "substitutions": 2,
+            "deletions": 0,
+            "insertions": 0,
+            "errors": 2,
+            "reference_words": 87,
+            "wer": 0.022988505747126436
+          },
+          "delta": 0.011494252873563218,
+          "max_delta": 0.06,
+          "pass": true
+        },
+        "gate_wer": true,
+        "pass": false
+      }
+    },
+    {
+      "artifacts": [
+        "checkpoints/transform-00020.pt"
+      ],
+      "completed_updates": 20,
+      "transform_digest": "b239b813e78a0140",
+      "alpha": 0.75,
+      "metrics": {
+        "scored_pairs": 12,
+        "isr": 1.0,
+        "isr_control": 1.0,
+        "isr_degradation": 0.0,
+        "gate_isr": true,
+        "emotion_prob": 0.687807559967041,
+        "emotion_prob_control": 0.5006954073905945,
+        "emotion_delta_mean": 0.18711213767528534,
+        "emotion_delta_ci": [
+          -0.25907453894615173,
+          0.5983131527900696
+        ],
+        "gate_emotion": false,
+        "speaker_sim": 0.865223228931427,
+        "speaker_sim_control": 0.8899702429771423,
+        "speaker_degradation": 0.024747014045715332,
+        "gate_speaker_abs": true,
+        "gate_speaker_degradation": true,
+        "wer": {
+          "treated": {
+            "substitutions": 2,
+            "deletions": 0,
+            "insertions": 0,
+            "errors": 2,
+            "reference_words": 87,
+            "wer": 0.022988505747126436
+          },
+          "control": {
+            "substitutions": 4,
+            "deletions": 0,
+            "insertions": 1,
+            "errors": 5,
+            "reference_words": 87,
+            "wer": 0.05747126436781609
+          },
+          "delta": -0.034482758620689655,
+          "max_delta": 0.06,
+          "pass": true
+        },
+        "gate_wer": true,
+        "pass": false
+      }
+    },
+    {
+      "artifacts": [
+        "checkpoints/transform-00020.pt"
+      ],
+      "completed_updates": 20,
+      "transform_digest": "b239b813e78a0140",
+      "alpha": 1.0,
+      "metrics": {
+        "scored_pairs": 12,
+        "isr": 1.0,
+        "isr_control": 1.0,
+        "isr_degradation": 0.0,
+        "gate_isr": true,
+        "emotion_prob": 0.4443695545196533,
+        "emotion_prob_control": 0.5040663480758667,
+        "emotion_delta_mean": -0.059696804732084274,
+        "emotion_delta_ci": [
+          -0.45737335085868835,
+          0.35289645195007324
+        ],
+        "gate_emotion": false,
+        "speaker_sim": 0.8252525329589844,
+        "speaker_sim_control": 0.8510237336158752,
+        "speaker_degradation": 0.02577120065689087,
+        "gate_speaker_abs": false,
+        "gate_speaker_degradation": true,
+        "wer": {
+          "treated": {
+            "substitutions": 3,
+            "deletions": 8,
+            "insertions": 0,
+            "errors": 11,
+            "reference_words": 87,
+            "wer": 0.12643678160919541
+          },
+          "control": {
+            "substitutions": 3,
+            "deletions": 1,
+            "insertions": 0,
+            "errors": 4,
+            "reference_words": 87,
+            "wer": 0.04597701149425287
+          },
+          "delta": 0.08045977011494254,
+          "max_delta": 0.06,
+          "pass": false
+        },
+        "gate_wer": false,
+        "pass": false
+      }
+    },
+    {
+      "artifacts": [
+        "checkpoints/transform-00020.pt"
+      ],
+      "completed_updates": 20,
+      "transform_digest": "b239b813e78a0140",
+      "alpha": 1.25,
+      "metrics": {
+        "scored_pairs": 12,
+        "isr": 1.0,
+        "isr_control": 1.0,
+        "isr_degradation": 0.0,
+        "gate_isr": true,
+        "emotion_prob": 0.509496808052063,
+        "emotion_prob_control": 0.07077229768037796,
+        "emotion_delta_mean": 0.43872448801994324,
+        "emotion_delta_ci": [
+          0.12110232561826706,
+          0.7436102628707886
+        ],
+        "gate_emotion": true,
+        "speaker_sim": 0.7848682999610901,
+        "speaker_sim_control": 0.7981751561164856,
+        "speaker_degradation": 0.013306856155395508,
+        "gate_speaker_abs": false,
+        "gate_speaker_degradation": true,
+        "wer": {
+          "treated": {
+            "substitutions": 6,
+            "deletions": 19,
+            "insertions": 0,
+            "errors": 25,
+            "reference_words": 87,
+            "wer": 0.28735632183908044
+          },
+          "control": {
+            "substitutions": 5,
+            "deletions": 12,
+            "insertions": 0,
+            "errors": 17,
+            "reference_words": 87,
+            "wer": 0.19540229885057472
+          },
+          "delta": 0.09195402298850572,
+          "max_delta": 0.06,
+          "pass": false
+        },
+        "gate_wer": false,
+        "pass": false
+      }
+    },
+    {
+      "artifacts": [
+        "checkpoints/transform-00025.pt"
+      ],
+      "completed_updates": 25,
+      "transform_digest": "13c214b30ff8e7d5",
+      "alpha": 0.5,
+      "metrics": {
+        "scored_pairs": 12,
+        "isr": 1.0,
+        "isr_control": 1.0,
+        "isr_degradation": 0.0,
+        "gate_isr": true,
+        "emotion_prob": 0.6334584951400757,
+        "emotion_prob_control": 0.5550051331520081,
+        "emotion_delta_mean": 0.07845336198806763,
+        "emotion_delta_ci": [
+          -0.21259410679340363,
+          0.3671413064002991
+        ],
+        "gate_emotion": false,
+        "speaker_sim": 0.8948265910148621,
+        "speaker_sim_control": 0.917302668094635,
+        "speaker_degradation": 0.02247607707977295,
+        "gate_speaker_abs": true,
+        "gate_speaker_degradation": true,
+        "wer": {
+          "treated": {
+            "substitutions": 2,
+            "deletions": 0,
+            "insertions": 0,
+            "errors": 2,
+            "reference_words": 87,
+            "wer": 0.022988505747126436
+          },
+          "control": {
+            "substitutions": 2,
+            "deletions": 0,
+            "insertions": 0,
+            "errors": 2,
+            "reference_words": 87,
+            "wer": 0.022988505747126436
+          },
+          "delta": 0.0,
+          "max_delta": 0.06,
+          "pass": true
+        },
+        "gate_wer": true,
+        "pass": false
+      }
+    },
+    {
+      "artifacts": [
+        "checkpoints/transform-00025.pt"
+      ],
+      "completed_updates": 25,
+      "transform_digest": "13c214b30ff8e7d5",
+      "alpha": 0.73,
+      "metrics": {
+        "scored_pairs": 12,
+        "isr": 1.0,
+        "isr_control": 1.0,
+        "isr_degradation": 0.0,
+        "gate_isr": true,
+        "emotion_prob": 0.658234179019928,
+        "emotion_prob_control": 0.520481526851654,
+        "emotion_delta_mean": 0.13775263726711273,
+        "emotion_delta_ci": [
+          -0.2677288055419922,
+          0.5428538918495178
+        ],
+        "gate_emotion": false,
+        "speaker_sim": 0.861798107624054,
+        "speaker_sim_control": 0.8941373229026794,
+        "speaker_degradation": 0.03233921527862549,
+        "gate_speaker_abs": true,
+        "gate_speaker_degradation": true,
+        "wer": {
+          "treated": {
+            "substitutions": 4,
+            "deletions": 0,
+            "insertions": 0,
+            "errors": 4,
+            "reference_words": 87,
+            "wer": 0.04597701149425287
+          },
+          "control": {
+            "substitutions": 2,
+            "deletions": 0,
+            "insertions": 0,
+            "errors": 2,
+            "reference_words": 87,
+            "wer": 0.022988505747126436
+          },
+          "delta": 0.022988505747126436,
+          "max_delta": 0.06,
+          "pass": true
+        },
+        "gate_wer": true,
+        "pass": false
+      }
+    },
+    {
+      "artifacts": [
+        "checkpoints/transform-00025.pt"
+      ],
+      "completed_updates": 25,
+      "transform_digest": "13c214b30ff8e7d5",
+      "alpha": 0.75,
+      "metrics": {
+        "scored_pairs": 12,
+        "isr": 1.0,
+        "isr_control": 1.0,
+        "isr_degradation": 0.0,
+        "gate_isr": true,
+        "emotion_prob": 0.7327682971954346,
+        "emotion_prob_control": 0.5006954073905945,
+        "emotion_delta_mean": 0.23207302391529083,
+        "emotion_delta_ci": [
+          -0.16670270264148712,
+          0.6214396953582764
+        ],
+        "gate_emotion": false,
+        "speaker_sim": 0.8741727471351624,
+        "speaker_sim_control": 0.8899702429771423,
+        "speaker_degradation": 0.01579749584197998,
+        "gate_speaker_abs": true,
+        "gate_speaker_degradation": true,
+        "wer": {
+          "treated": {
+            "substitutions": 2,
+            "deletions": 0,
+            "insertions": 0,
+            "errors": 2,
+            "reference_words": 87,
+            "wer": 0.022988505747126436
+          },
+          "control": {
+            "substitutions": 4,
+            "deletions": 0,
+            "insertions": 1,
+            "errors": 5,
+            "reference_words": 87,
+            "wer": 0.05747126436781609
+          },
+          "delta": -0.034482758620689655,
+          "max_delta": 0.06,
+          "pass": true
+        },
+        "gate_wer": true,
+        "pass": false
+      }
+    },
+    {
+      "artifacts": [
+        "checkpoints/transform-00025.pt"
+      ],
+      "completed_updates": 25,
+      "transform_digest": "13c214b30ff8e7d5",
+      "alpha": 1.0,
+      "metrics": {
+        "scored_pairs": 12,
+        "isr": 1.0,
+        "isr_control": 1.0,
+        "isr_degradation": 0.0,
+        "gate_isr": true,
+        "emotion_prob": 0.5489128828048706,
+        "emotion_prob_control": 0.5040663480758667,
+        "emotion_delta_mean": 0.04484650120139122,
+        "emotion_delta_ci": [
+          -0.23522977530956268,
+          0.3266349136829376
+        ],
+        "gate_emotion": false,
+        "speaker_sim": 0.7870011925697327,
+        "speaker_sim_control": 0.8510237336158752,
+        "speaker_degradation": 0.06402254104614258,
+        "gate_speaker_abs": false,
+        "gate_speaker_degradation": false,
+        "wer": {
+          "treated": {
+            "substitutions": 4,
+            "deletions": 12,
+            "insertions": 1,
+            "errors": 17,
+            "reference_words": 87,
+            "wer": 0.19540229885057472
+          },
+          "control": {
+            "substitutions": 3,
+            "deletions": 1,
+            "insertions": 0,
+            "errors": 4,
+            "reference_words": 87,
+            "wer": 0.04597701149425287
+          },
+          "delta": 0.14942528735632185,
+          "max_delta": 0.06,
+          "pass": false
+        },
+        "gate_wer": false,
+        "pass": false
+      }
+    },
+    {
+      "artifacts": [
+        "checkpoints/transform-00025.pt"
+      ],
+      "completed_updates": 25,
+      "transform_digest": "13c214b30ff8e7d5",
+      "alpha": 1.25,
+      "metrics": {
+        "scored_pairs": 12,
+        "isr": 1.0,
+        "isr_control": 1.0,
+        "isr_degradation": 0.0,
+        "gate_isr": true,
+        "emotion_prob": 0.48683202266693115,
+        "emotion_prob_control": 0.07077229768037796,
+        "emotion_delta_mean": 0.4160597324371338,
+        "emotion_delta_ci": [
+          0.0967903882265091,
+          0.7366971969604492
+        ],
+        "gate_emotion": true,
+        "speaker_sim": 0.7150511741638184,
+        "speaker_sim_control": 0.7981751561164856,
+        "speaker_degradation": 0.08312398195266724,
+        "gate_speaker_abs": false,
+        "gate_speaker_degradation": false,
+        "wer": {
+          "treated": {
+            "substitutions": 8,
+            "deletions": 16,
+            "insertions": 4,
+            "errors": 28,
+            "reference_words": 87,
+            "wer": 0.3218390804597701
+          },
+          "control": {
+            "substitutions": 5,
+            "deletions": 12,
+            "insertions": 0,
+            "errors": 17,
+            "reference_words": 87,
+            "wer": 0.19540229885057472
+          },
+          "delta": 0.1264367816091954,
+          "max_delta": 0.06,
+          "pass": false
+        },
+        "gate_wer": false,
+        "pass": false
+      }
+    },
+    {
+      "artifacts": [
+        "checkpoints/transform-00030.pt",
+        "best_transform.pt"
+      ],
+      "completed_updates": 30,
+      "transform_digest": "b9a2acbf72467638",
+      "alpha": 0.5,
+      "metrics": {
+        "scored_pairs": 12,
+        "isr": 1.0,
+        "isr_control": 1.0,
+        "isr_degradation": 0.0,
+        "gate_isr": true,
+        "emotion_prob": 0.784296452999115,
+        "emotion_prob_control": 0.5550051331520081,
+        "emotion_delta_mean": 0.22929127514362335,
+        "emotion_delta_ci": [
+          -0.13970322906970978,
+          0.5766153931617737
+        ],
+        "gate_emotion": false,
+        "speaker_sim": 0.9011702537536621,
+        "speaker_sim_control": 0.917302668094635,
+        "speaker_degradation": 0.0161324143409729,
+        "gate_speaker_abs": true,
+        "gate_speaker_degradation": true,
+        "wer": {
+          "treated": {
+            "substitutions": 1,
+            "deletions": 0,
+            "insertions": 0,
+            "errors": 1,
+            "reference_words": 87,
+            "wer": 0.011494252873563218
+          },
+          "control": {
+            "substitutions": 2,
+            "deletions": 0,
+            "insertions": 0,
+            "errors": 2,
+            "reference_words": 87,
+            "wer": 0.022988505747126436
+          },
+          "delta": -0.011494252873563218,
+          "max_delta": 0.06,
+          "pass": true
+        },
+        "gate_wer": true,
+        "pass": false
+      }
+    },
+    {
+      "artifacts": [
+        "checkpoints/transform-00030.pt",
+        "best_transform.pt"
+      ],
+      "completed_updates": 30,
+      "transform_digest": "b9a2acbf72467638",
+      "alpha": 0.73,
+      "metrics": {
+        "scored_pairs": 12,
+        "isr": 1.0,
+        "isr_control": 1.0,
+        "isr_degradation": 0.0,
+        "gate_isr": true,
+        "emotion_prob": 0.8333023190498352,
+        "emotion_prob_control": 0.520481526851654,
+        "emotion_delta_mean": 0.3128208518028259,
+        "emotion_delta_ci": [
+          0.08747155964374542,
+          0.5631270408630371
+        ],
+        "gate_emotion": true,
+        "speaker_sim": 0.8667944073677063,
+        "speaker_sim_control": 0.8941373229026794,
+        "speaker_degradation": 0.027342915534973145,
+        "gate_speaker_abs": true,
+        "gate_speaker_degradation": true,
+        "wer": {
+          "treated": {
+            "substitutions": 1,
+            "deletions": 0,
+            "insertions": 0,
+            "errors": 1,
+            "reference_words": 87,
+            "wer": 0.011494252873563218
+          },
+          "control": {
+            "substitutions": 2,
+            "deletions": 0,
+            "insertions": 0,
+            "errors": 2,
+            "reference_words": 87,
+            "wer": 0.022988505747126436
+          },
+          "delta": -0.011494252873563218,
+          "max_delta": 0.06,
+          "pass": true
+        },
+        "gate_wer": true,
+        "pass": true
+      }
+    },
+    {
+      "artifacts": [
+        "checkpoints/transform-00030.pt",
+        "best_transform.pt"
+      ],
+      "completed_updates": 30,
+      "transform_digest": "b9a2acbf72467638",
+      "alpha": 0.75,
+      "metrics": {
+        "scored_pairs": 12,
+        "isr": 1.0,
+        "isr_control": 1.0,
+        "isr_degradation": 0.0,
+        "gate_isr": true,
+        "emotion_prob": 0.7010591626167297,
+        "emotion_prob_control": 0.5006954073905945,
+        "emotion_delta_mean": 0.2003638595342636,
+        "emotion_delta_ci": [
+          -0.20093633234500885,
+          0.5791944861412048
+        ],
+        "gate_emotion": false,
+        "speaker_sim": 0.8428072929382324,
+        "speaker_sim_control": 0.8899702429771423,
+        "speaker_degradation": 0.04716295003890991,
+        "gate_speaker_abs": false,
+        "gate_speaker_degradation": true,
+        "wer": {
+          "treated": {
+            "substitutions": 4,
+            "deletions": 7,
+            "insertions": 0,
+            "errors": 11,
+            "reference_words": 87,
+            "wer": 0.12643678160919541
+          },
+          "control": {
+            "substitutions": 4,
+            "deletions": 0,
+            "insertions": 1,
+            "errors": 5,
+            "reference_words": 87,
+            "wer": 0.05747126436781609
+          },
+          "delta": 0.06896551724137932,
+          "max_delta": 0.06,
+          "pass": false
+        },
+        "gate_wer": false,
+        "pass": false
+      }
+    },
+    {
+      "artifacts": [
+        "checkpoints/transform-00030.pt",
+        "best_transform.pt"
+      ],
+      "completed_updates": 30,
+      "transform_digest": "b9a2acbf72467638",
+      "alpha": 1.0,
+      "metrics": {
+        "scored_pairs": 12,
+        "isr": 1.0,
+        "isr_control": 1.0,
+        "isr_degradation": 0.0,
+        "gate_isr": true,
+        "emotion_prob": 0.470416784286499,
+        "emotion_prob_control": 0.5040663480758667,
+        "emotion_delta_mean": -0.03364963456988335,
+        "emotion_delta_ci": [
+          -0.30410340428352356,
+          0.2213089019060135
+        ],
+        "gate_emotion": false,
+        "speaker_sim": 0.8009300827980042,
+        "speaker_sim_control": 0.8510237336158752,
+        "speaker_degradation": 0.050093650817871094,
+        "gate_speaker_abs": false,
+        "gate_speaker_degradation": false,
+        "wer": {
+          "treated": {
+            "substitutions": 10,
+            "deletions": 20,
+            "insertions": 0,
+            "errors": 30,
+            "reference_words": 87,
+            "wer": 0.3448275862068966
+          },
+          "control": {
+            "substitutions": 3,
+            "deletions": 1,
+            "insertions": 0,
+            "errors": 4,
+            "reference_words": 87,
+            "wer": 0.04597701149425287
+          },
+          "delta": 0.2988505747126437,
+          "max_delta": 0.06,
+          "pass": false
+        },
+        "gate_wer": false,
+        "pass": false
+      }
+    },
+    {
+      "artifacts": [
+        "checkpoints/transform-00030.pt",
+        "best_transform.pt"
+      ],
+      "completed_updates": 30,
+      "transform_digest": "b9a2acbf72467638",
+      "alpha": 1.25,
+      "metrics": {
+        "scored_pairs": 12,
+        "isr": 1.0,
+        "isr_control": 1.0,
+        "isr_degradation": 0.0,
+        "gate_isr": true,
+        "emotion_prob": 0.458616703748703,
+        "emotion_prob_control": 0.07077229768037796,
+        "emotion_delta_mean": 0.38784435391426086,
+        "emotion_delta_ci": [
+          0.07999509572982788,
+          0.690173864364624
+        ],
+        "gate_emotion": true,
+        "speaker_sim": 0.7255757451057434,
+        "speaker_sim_control": 0.7981751561164856,
+        "speaker_degradation": 0.07259941101074219,
+        "gate_speaker_abs": false,
+        "gate_speaker_degradation": false,
+        "wer": {
+          "treated": {
+            "substitutions": 5,
+            "deletions": 27,
+            "insertions": 0,
+            "errors": 32,
+            "reference_words": 87,
+            "wer": 0.367816091954023
+          },
+          "control": {
+            "substitutions": 5,
+            "deletions": 12,
+            "insertions": 0,
+            "errors": 17,
+            "reference_words": 87,
+            "wer": 0.19540229885057472
+          },
+          "delta": 0.17241379310344826,
+          "max_delta": 0.06,
+          "pass": false
+        },
+        "gate_wer": false,
+        "pass": false
+      }
+    },
+    {
+      "artifacts": [
+        "checkpoints/transform-00035.pt"
+      ],
+      "completed_updates": 35,
+      "transform_digest": "47f6c17ecf1bf305",
+      "alpha": 0.5,
+      "metrics": {
+        "scored_pairs": 12,
+        "isr": 1.0,
+        "isr_control": 1.0,
+        "isr_degradation": 0.0,
+        "gate_isr": true,
+        "emotion_prob": 0.7516202330589294,
+        "emotion_prob_control": 0.5550051331520081,
+        "emotion_delta_mean": 0.19661499559879303,
+        "emotion_delta_ci": [
+          -0.10444173961877823,
+          0.4945851266384125
+        ],
+        "gate_emotion": false,
+        "speaker_sim": 0.8911498188972473,
+        "speaker_sim_control": 0.917302668094635,
+        "speaker_degradation": 0.026152849197387695,
+        "gate_speaker_abs": true,
+        "gate_speaker_degradation": true,
+        "wer": {
+          "treated": {
+            "substitutions": 2,
+            "deletions": 0,
+            "insertions": 0,
+            "errors": 2,
+            "reference_words": 87,
+            "wer": 0.022988505747126436
+          },
+          "control": {
+            "substitutions": 2,
+            "deletions": 0,
+            "insertions": 0,
+            "errors": 2,
+            "reference_words": 87,
+            "wer": 0.022988505747126436
+          },
+          "delta": 0.0,
+          "max_delta": 0.06,
+          "pass": true
+        },
+        "gate_wer": true,
+        "pass": false
+      }
+    },
+    {
+      "artifacts": [
+        "checkpoints/transform-00035.pt"
+      ],
+      "completed_updates": 35,
+      "transform_digest": "47f6c17ecf1bf305",
+      "alpha": 0.73,
+      "metrics": {
+        "scored_pairs": 12,
+        "isr": 1.0,
+        "isr_control": 1.0,
+        "isr_degradation": 0.0,
+        "gate_isr": true,
+        "emotion_prob": 0.7507412433624268,
+        "emotion_prob_control": 0.520481526851654,
+        "emotion_delta_mean": 0.23025961220264435,
+        "emotion_delta_ci": [
+          -0.052637871354818344,
+          0.5303480625152588
+        ],
+        "gate_emotion": false,
+        "speaker_sim": 0.8687523007392883,
+        "speaker_sim_control": 0.8941373229026794,
+        "speaker_degradation": 0.025385022163391113,
+        "gate_speaker_abs": true,
+        "gate_speaker_degradation": true,
+        "wer": {
+          "treated": {
+            "substitutions": 2,
+            "deletions": 0,
+            "insertions": 0,
+            "errors": 2,
+            "reference_words": 87,
+            "wer": 0.022988505747126436
+          },
+          "control": {
+            "substitutions": 2,
+            "deletions": 0,
+            "insertions": 0,
+            "errors": 2,
+            "reference_words": 87,
+            "wer": 0.022988505747126436
+          },
+          "delta": 0.0,
+          "max_delta": 0.06,
+          "pass": true
+        },
+        "gate_wer": true,
+        "pass": false
+      }
+    },
+    {
+      "artifacts": [
+        "checkpoints/transform-00035.pt"
+      ],
+      "completed_updates": 35,
+      "transform_digest": "47f6c17ecf1bf305",
+      "alpha": 0.75,
+      "metrics": {
+        "scored_pairs": 12,
+        "isr": 1.0,
+        "isr_control": 1.0,
+        "isr_degradation": 0.0,
+        "gate_isr": true,
+        "emotion_prob": 0.6827676296234131,
+        "emotion_prob_control": 0.5006954073905945,
+        "emotion_delta_mean": 0.18207217752933502,
+        "emotion_delta_ci": [
+          -0.26998451352119446,
+          0.5973113179206848
+        ],
+        "gate_emotion": false,
+        "speaker_sim": 0.8316434025764465,
+        "speaker_sim_control": 0.8899702429771423,
+        "speaker_degradation": 0.0583268404006958,
+        "gate_speaker_abs": false,
+        "gate_speaker_degradation": false,
+        "wer": {
+          "treated": {
+            "substitutions": 3,
+            "deletions": 7,
+            "insertions": 0,
+            "errors": 10,
+            "reference_words": 87,
+            "wer": 0.11494252873563218
+          },
+          "control": {
+            "substitutions": 4,
+            "deletions": 0,
+            "insertions": 1,
+            "errors": 5,
+            "reference_words": 87,
+            "wer": 0.05747126436781609
+          },
+          "delta": 0.05747126436781609,
+          "max_delta": 0.06,
+          "pass": true
+        },
+        "gate_wer": true,
+        "pass": false
+      }
+    },
+    {
+      "artifacts": [
+        "checkpoints/transform-00035.pt"
+      ],
+      "completed_updates": 35,
+      "transform_digest": "47f6c17ecf1bf305",
+      "alpha": 1.0,
+      "metrics": {
+        "scored_pairs": 12,
+        "isr": 1.0,
+        "isr_control": 1.0,
+        "isr_degradation": 0.0,
+        "gate_isr": true,
+        "emotion_prob": 0.7702942490577698,
+        "emotion_prob_control": 0.5040663480758667,
+        "emotion_delta_mean": 0.26622799038887024,
+        "emotion_delta_ci": [
+          -0.00439570564776659,
+          0.5536875128746033
+        ],
+        "gate_emotion": false,
+        "speaker_sim": 0.8387483954429626,
+        "speaker_sim_control": 0.8510237336158752,
+        "speaker_degradation": 0.012275338172912598,
+        "gate_speaker_abs": false,
+        "gate_speaker_degradation": true,
+        "wer": {
+          "treated": {
+            "substitutions": 4,
+            "deletions": 1,
+            "insertions": 0,
+            "errors": 5,
+            "reference_words": 87,
+            "wer": 0.05747126436781609
+          },
+          "control": {
+            "substitutions": 3,
+            "deletions": 1,
+            "insertions": 0,
+            "errors": 4,
+            "reference_words": 87,
+            "wer": 0.04597701149425287
+          },
+          "delta": 0.011494252873563218,
+          "max_delta": 0.06,
+          "pass": true
+        },
+        "gate_wer": true,
+        "pass": false
+      }
+    },
+    {
+      "artifacts": [
+        "checkpoints/transform-00035.pt"
+      ],
+      "completed_updates": 35,
+      "transform_digest": "47f6c17ecf1bf305",
+      "alpha": 1.25,
+      "metrics": {
+        "scored_pairs": 12,
+        "isr": 1.0,
+        "isr_control": 1.0,
+        "isr_degradation": 0.0,
+        "gate_isr": true,
+        "emotion_prob": 0.41431260108947754,
+        "emotion_prob_control": 0.07077229768037796,
+        "emotion_delta_mean": 0.34354034066200256,
+        "emotion_delta_ci": [
+          0.03511379659175873,
+          0.6559833884239197
+        ],
+        "gate_emotion": true,
+        "speaker_sim": 0.7896626591682434,
+        "speaker_sim_control": 0.7981751561164856,
+        "speaker_degradation": 0.008512496948242188,
+        "gate_speaker_abs": false,
+        "gate_speaker_degradation": true,
+        "wer": {
+          "treated": {
+            "substitutions": 8,
+            "deletions": 4,
+            "insertions": 0,
+            "errors": 12,
+            "reference_words": 87,
+            "wer": 0.13793103448275862
+          },
+          "control": {
+            "substitutions": 5,
+            "deletions": 12,
+            "insertions": 0,
+            "errors": 17,
+            "reference_words": 87,
+            "wer": 0.19540229885057472
+          },
+          "delta": -0.057471264367816105,
+          "max_delta": 0.06,
+          "pass": true
+        },
+        "gate_wer": true,
+        "pass": false
+      }
+    },
+    {
+      "artifacts": [
+        "checkpoints/transform-00040.pt"
+      ],
+      "completed_updates": 40,
+      "transform_digest": "21842f29e6a88416",
+      "alpha": 0.5,
+      "metrics": {
+        "scored_pairs": 12,
+        "isr": 1.0,
+        "isr_control": 1.0,
+        "isr_degradation": 0.0,
+        "gate_isr": true,
+        "emotion_prob": 0.8329164385795593,
+        "emotion_prob_control": 0.5550051331520081,
+        "emotion_delta_mean": 0.27791130542755127,
+        "emotion_delta_ci": [
+          0.06091893091797829,
+          0.5205285549163818
+        ],
+        "gate_emotion": true,
+        "speaker_sim": 0.8949508666992188,
+        "speaker_sim_control": 0.917302668094635,
+        "speaker_degradation": 0.02235180139541626,
+        "gate_speaker_abs": true,
+        "gate_speaker_degradation": true,
+        "wer": {
+          "treated": {
+            "substitutions": 3,
+            "deletions": 0,
+            "insertions": 0,
+            "errors": 3,
+            "reference_words": 87,
+            "wer": 0.034482758620689655
+          },
+          "control": {
+            "substitutions": 2,
+            "deletions": 0,
+            "insertions": 0,
+            "errors": 2,
+            "reference_words": 87,
+            "wer": 0.022988505747126436
+          },
+          "delta": 0.011494252873563218,
+          "max_delta": 0.06,
+          "pass": true
+        },
+        "gate_wer": true,
+        "pass": true
+      }
+    },
+    {
+      "artifacts": [
+        "checkpoints/transform-00040.pt"
+      ],
+      "completed_updates": 40,
+      "transform_digest": "21842f29e6a88416",
+      "alpha": 0.73,
+      "metrics": {
+        "scored_pairs": 12,
+        "isr": 1.0,
+        "isr_control": 1.0,
+        "isr_degradation": 0.0,
+        "gate_isr": true,
+        "emotion_prob": 0.750315248966217,
+        "emotion_prob_control": 0.520481526851654,
+        "emotion_delta_mean": 0.2298337072134018,
+        "emotion_delta_ci": [
+          -0.16083557903766632,
+          0.5969699621200562
+        ],
+        "gate_emotion": false,
+        "speaker_sim": 0.8376534581184387,
+        "speaker_sim_control": 0.8941373229026794,
+        "speaker_degradation": 0.05648386478424072,
+        "gate_speaker_abs": false,
+        "gate_speaker_degradation": false,
+        "wer": {
+          "treated": {
+            "substitutions": 3,
+            "deletions": 1,
+            "insertions": 0,
+            "errors": 4,
+            "reference_words": 87,
+            "wer": 0.04597701149425287
+          },
+          "control": {
+            "substitutions": 2,
+            "deletions": 0,
+            "insertions": 0,
+            "errors": 2,
+            "reference_words": 87,
+            "wer": 0.022988505747126436
+          },
+          "delta": 0.022988505747126436,
+          "max_delta": 0.06,
+          "pass": true
+        },
+        "gate_wer": true,
+        "pass": false
+      }
+    },
+    {
+      "artifacts": [
+        "checkpoints/transform-00040.pt"
+      ],
+      "completed_updates": 40,
+      "transform_digest": "21842f29e6a88416",
+      "alpha": 0.75,
+      "metrics": {
+        "scored_pairs": 12,
+        "isr": 1.0,
+        "isr_control": 1.0,
+        "isr_degradation": 0.0,
+        "gate_isr": true,
+        "emotion_prob": 0.7615209221839905,
+        "emotion_prob_control": 0.5006954073905945,
+        "emotion_delta_mean": 0.26082560420036316,
+        "emotion_delta_ci": [
+          -0.13098692893981934,
+          0.6525717973709106
+        ],
+        "gate_emotion": false,
+        "speaker_sim": 0.8802752494812012,
+        "speaker_sim_control": 0.8899702429771423,
+        "speaker_degradation": 0.009694993495941162,
+        "gate_speaker_abs": true,
+        "gate_speaker_degradation": true,
+        "wer": {
+          "treated": {
+            "substitutions": 4,
+            "deletions": 0,
+            "insertions": 0,
+            "errors": 4,
+            "reference_words": 87,
+            "wer": 0.04597701149425287
+          },
+          "control": {
+            "substitutions": 4,
+            "deletions": 0,
+            "insertions": 1,
+            "errors": 5,
+            "reference_words": 87,
+            "wer": 0.05747126436781609
+          },
+          "delta": -0.011494252873563218,
+          "max_delta": 0.06,
+          "pass": true
+        },
+        "gate_wer": true,
+        "pass": false
+      }
+    },
+    {
+      "artifacts": [
+        "checkpoints/transform-00040.pt"
+      ],
+      "completed_updates": 40,
+      "transform_digest": "21842f29e6a88416",
+      "alpha": 1.0,
+      "metrics": {
+        "scored_pairs": 12,
+        "isr": 1.0,
+        "isr_control": 1.0,
+        "isr_degradation": 0.0,
+        "gate_isr": true,
+        "emotion_prob": 0.7201828956604004,
+        "emotion_prob_control": 0.5040663480758667,
+        "emotion_delta_mean": 0.2161165475845337,
+        "emotion_delta_ci": [
+          0.038371242582798004,
+          0.44474172592163086
+        ],
+        "gate_emotion": true,
+        "speaker_sim": 0.8221774101257324,
+        "speaker_sim_control": 0.8510237336158752,
+        "speaker_degradation": 0.028846323490142822,
+        "gate_speaker_abs": false,
+        "gate_speaker_degradation": true,
+        "wer": {
+          "treated": {
+            "substitutions": 4,
+            "deletions": 0,
+            "insertions": 1,
+            "errors": 5,
+            "reference_words": 87,
+            "wer": 0.05747126436781609
+          },
+          "control": {
+            "substitutions": 3,
+            "deletions": 1,
+            "insertions": 0,
+            "errors": 4,
+            "reference_words": 87,
+            "wer": 0.04597701149425287
+          },
+          "delta": 0.011494252873563218,
+          "max_delta": 0.06,
+          "pass": true
+        },
+        "gate_wer": true,
+        "pass": false
+      }
+    },
+    {
+      "artifacts": [
+        "checkpoints/transform-00040.pt"
+      ],
+      "completed_updates": 40,
+      "transform_digest": "21842f29e6a88416",
+      "alpha": 1.25,
+      "metrics": {
+        "scored_pairs": 12,
+        "isr": 1.0,
+        "isr_control": 1.0,
+        "isr_degradation": 0.0,
+        "gate_isr": true,
+        "emotion_prob": 0.3234046399593353,
+        "emotion_prob_control": 0.07077229768037796,
+        "emotion_delta_mean": 0.25263237953186035,
+        "emotion_delta_ci": [
+          -0.049281228333711624,
+          0.556710422039032
+        ],
+        "gate_emotion": false,
+        "speaker_sim": 0.7440022826194763,
+        "speaker_sim_control": 0.7981751561164856,
+        "speaker_degradation": 0.05417287349700928,
+        "gate_speaker_abs": false,
+        "gate_speaker_degradation": false,
+        "wer": {
+          "treated": {
+            "substitutions": 11,
+            "deletions": 13,
+            "insertions": 217,
+            "errors": 241,
+            "reference_words": 87,
+            "wer": 2.7701149425287355
+          },
+          "control": {
+            "substitutions": 5,
+            "deletions": 12,
+            "insertions": 0,
+            "errors": 17,
+            "reference_words": 87,
+            "wer": 0.19540229885057472
+          },
+          "delta": 2.574712643678161,
+          "max_delta": 0.06,
+          "pass": false
+        },
+        "gate_wer": false,
+        "pass": false
+      }
+    },
+    {
+      "artifacts": [
+        "checkpoints/transform-00045.pt"
+      ],
+      "completed_updates": 45,
+      "transform_digest": "f46bc932cb62eddf",
+      "alpha": 0.5,
+      "metrics": {
+        "scored_pairs": 12,
+        "isr": 1.0,
+        "isr_control": 1.0,
+        "isr_degradation": 0.0,
+        "gate_isr": true,
+        "emotion_prob": 0.6895365715026855,
+        "emotion_prob_control": 0.5550051331520081,
+        "emotion_delta_mean": 0.1345314234495163,
+        "emotion_delta_ci": [
+          -0.10144136846065521,
+          0.38552048802375793
+        ],
+        "gate_emotion": false,
+        "speaker_sim": 0.9010998606681824,
+        "speaker_sim_control": 0.917302668094635,
+        "speaker_degradation": 0.016202807426452637,
+        "gate_speaker_abs": true,
+        "gate_speaker_degradation": true,
+        "wer": {
+          "treated": {
+            "substitutions": 2,
+            "deletions": 0,
+            "insertions": 0,
+            "errors": 2,
+            "reference_words": 87,
+            "wer": 0.022988505747126436
+          },
+          "control": {
+            "substitutions": 2,
+            "deletions": 0,
+            "insertions": 0,
+            "errors": 2,
+            "reference_words": 87,
+            "wer": 0.022988505747126436
+          },
+          "delta": 0.0,
+          "max_delta": 0.06,
+          "pass": true
+        },
+        "gate_wer": true,
+        "pass": false
+      }
+    },
+    {
+      "artifacts": [
+        "checkpoints/transform-00045.pt"
+      ],
+      "completed_updates": 45,
+      "transform_digest": "f46bc932cb62eddf",
+      "alpha": 0.73,
+      "metrics": {
+        "scored_pairs": 12,
+        "isr": 1.0,
+        "isr_control": 1.0,
+        "isr_degradation": 0.0,
+        "gate_isr": true,
+        "emotion_prob": 0.8247765898704529,
+        "emotion_prob_control": 0.520481526851654,
+        "emotion_delta_mean": 0.30429497361183167,
+        "emotion_delta_ci": [
+          0.06157625466585159,
+          0.5655537843704224
+        ],
+        "gate_emotion": true,
+        "speaker_sim": 0.8584716320037842,
+        "speaker_sim_control": 0.8941373229026794,
+        "speaker_degradation": 0.035665690898895264,
+        "gate_speaker_abs": true,
+        "gate_speaker_degradation": true,
+        "wer": {
+          "treated": {
+            "substitutions": 2,
+            "deletions": 0,
+            "insertions": 0,
+            "errors": 2,
+            "reference_words": 87,
+            "wer": 0.022988505747126436
+          },
+          "control": {
+            "substitutions": 2,
+            "deletions": 0,
+            "insertions": 0,
+            "errors": 2,
+            "reference_words": 87,
+            "wer": 0.022988505747126436
+          },
+          "delta": 0.0,
+          "max_delta": 0.06,
+          "pass": true
+        },
+        "gate_wer": true,
+        "pass": true
+      }
+    },
+    {
+      "artifacts": [
+        "checkpoints/transform-00045.pt"
+      ],
+      "completed_updates": 45,
+      "transform_digest": "f46bc932cb62eddf",
+      "alpha": 0.75,
+      "metrics": {
+        "scored_pairs": 12,
+        "isr": 1.0,
+        "isr_control": 1.0,
+        "isr_degradation": 0.0,
+        "gate_isr": true,
+        "emotion_prob": 0.6792275309562683,
+        "emotion_prob_control": 0.5006954073905945,
+        "emotion_delta_mean": 0.17853207886219025,
+        "emotion_delta_ci": [
+          -0.22107860445976257,
+          0.5791728496551514
+        ],
+        "gate_emotion": false,
+        "speaker_sim": 0.8243857026100159,
+        "speaker_sim_control": 0.8899702429771423,
+        "speaker_degradation": 0.06558454036712646,
+        "gate_speaker_abs": false,
+        "gate_speaker_degradation": false,
+        "wer": {
+          "treated": {
+            "substitutions": 4,
+            "deletions": 0,
+            "insertions": 0,
+            "errors": 4,
+            "reference_words": 87,
+            "wer": 0.04597701149425287
+          },
+          "control": {
+            "substitutions": 4,
+            "deletions": 0,
+            "insertions": 1,
+            "errors": 5,
+            "reference_words": 87,
+            "wer": 0.05747126436781609
+          },
+          "delta": -0.011494252873563218,
+          "max_delta": 0.06,
+          "pass": true
+        },
+        "gate_wer": true,
+        "pass": false
+      }
+    },
+    {
+      "artifacts": [
+        "checkpoints/transform-00045.pt"
+      ],
+      "completed_updates": 45,
+      "transform_digest": "f46bc932cb62eddf",
+      "alpha": 1.0,
+      "metrics": {
+        "scored_pairs": 12,
+        "isr": 1.0,
+        "isr_control": 1.0,
+        "isr_degradation": 0.0,
+        "gate_isr": true,
+        "emotion_prob": 0.6332347989082336,
+        "emotion_prob_control": 0.5040663480758667,
+        "emotion_delta_mean": 0.12916845083236694,
+        "emotion_delta_ci": [
+          -0.11952847987413406,
+          0.3962055444717407
+        ],
+        "gate_emotion": false,
+        "speaker_sim": 0.8221741318702698,
+        "speaker_sim_control": 0.8510237336158752,
+        "speaker_degradation": 0.02884960174560547,
+        "gate_speaker_abs": false,
+        "gate_speaker_degradation": true,
+        "wer": {
+          "treated": {
+            "substitutions": 10,
+            "deletions": 9,
+            "insertions": 215,
+            "errors": 234,
+            "reference_words": 87,
+            "wer": 2.689655172413793
+          },
+          "control": {
+            "substitutions": 3,
+            "deletions": 1,
+            "insertions": 0,
+            "errors": 4,
+            "reference_words": 87,
+            "wer": 0.04597701149425287
+          },
+          "delta": 2.6436781609195403,
+          "max_delta": 0.06,
+          "pass": false
+        },
+        "gate_wer": false,
+        "pass": false
+      }
+    },
+    {
+      "artifacts": [
+        "checkpoints/transform-00045.pt"
+      ],
+      "completed_updates": 45,
+      "transform_digest": "f46bc932cb62eddf",
+      "alpha": 1.25,
+      "metrics": {
+        "scored_pairs": 12,
+        "isr": 1.0,
+        "isr_control": 1.0,
+        "isr_degradation": 0.0,
+        "gate_isr": true,
+        "emotion_prob": 0.712719738483429,
+        "emotion_prob_control": 0.07077229768037796,
+        "emotion_delta_mean": 0.6419474482536316,
+        "emotion_delta_ci": [
+          0.3136526644229889,
+          0.9111061096191406
+        ],
+        "gate_emotion": true,
+        "speaker_sim": 0.7292029857635498,
+        "speaker_sim_control": 0.7981751561164856,
+        "speaker_degradation": 0.06897217035293579,
+        "gate_speaker_abs": false,
+        "gate_speaker_degradation": false,
+        "wer": {
+          "treated": {
+            "substitutions": 12,
+            "deletions": 14,
+            "insertions": 0,
+            "errors": 26,
+            "reference_words": 87,
+            "wer": 0.2988505747126437
+          },
+          "control": {
+            "substitutions": 5,
+            "deletions": 12,
+            "insertions": 0,
+            "errors": 17,
+            "reference_words": 87,
+            "wer": 0.19540229885057472
+          },
+          "delta": 0.10344827586206898,
+          "max_delta": 0.06,
+          "pass": false
+        },
+        "gate_wer": false,
+        "pass": false
+      }
+    },
+    {
+      "artifacts": [
+        "checkpoints/transform-00050.pt",
+        "final_transform.pt"
+      ],
+      "completed_updates": 50,
+      "transform_digest": "f415a0b9fc6ca4fb",
+      "alpha": 0.5,
+      "metrics": {
+        "scored_pairs": 12,
+        "isr": 1.0,
+        "isr_control": 1.0,
+        "isr_degradation": 0.0,
+        "gate_isr": true,
+        "emotion_prob": 0.801038920879364,
+        "emotion_prob_control": 0.5550051331520081,
+        "emotion_delta_mean": 0.24603380262851715,
+        "emotion_delta_ci": [
+          -0.09113864600658417,
+          0.5727642178535461
+        ],
+        "gate_emotion": false,
+        "speaker_sim": 0.9039686322212219,
+        "speaker_sim_control": 0.917302668094635,
+        "speaker_degradation": 0.013334035873413086,
+        "gate_speaker_abs": true,
+        "gate_speaker_degradation": true,
+        "wer": {
+          "treated": {
+            "substitutions": 1,
+            "deletions": 0,
+            "insertions": 0,
+            "errors": 1,
+            "reference_words": 87,
+            "wer": 0.011494252873563218
+          },
+          "control": {
+            "substitutions": 2,
+            "deletions": 0,
+            "insertions": 0,
+            "errors": 2,
+            "reference_words": 87,
+            "wer": 0.022988505747126436
+          },
+          "delta": -0.011494252873563218,
+          "max_delta": 0.06,
+          "pass": true
+        },
+        "gate_wer": true,
+        "pass": false
+      }
+    },
+    {
+      "artifacts": [
+        "checkpoints/transform-00050.pt",
+        "final_transform.pt"
+      ],
+      "completed_updates": 50,
+      "transform_digest": "f415a0b9fc6ca4fb",
+      "alpha": 0.73,
+      "metrics": {
+        "scored_pairs": 12,
+        "isr": 1.0,
+        "isr_control": 1.0,
+        "isr_degradation": 0.0,
+        "gate_isr": true,
+        "emotion_prob": 0.8068776726722717,
+        "emotion_prob_control": 0.520481526851654,
+        "emotion_delta_mean": 0.28639617562294006,
+        "emotion_delta_ci": [
+          -0.03734418377280235,
+          0.6055088639259338
+        ],
+        "gate_emotion": false,
+        "speaker_sim": 0.8360775113105774,
+        "speaker_sim_control": 0.8941373229026794,
+        "speaker_degradation": 0.05805981159210205,
+        "gate_speaker_abs": false,
+        "gate_speaker_degradation": false,
+        "wer": {
+          "treated": {
+            "substitutions": 2,
+            "deletions": 0,
+            "insertions": 4,
+            "errors": 6,
+            "reference_words": 87,
+            "wer": 0.06896551724137931
+          },
+          "control": {
+            "substitutions": 2,
+            "deletions": 0,
+            "insertions": 0,
+            "errors": 2,
+            "reference_words": 87,
+            "wer": 0.022988505747126436
+          },
+          "delta": 0.04597701149425287,
+          "max_delta": 0.06,
+          "pass": true
+        },
+        "gate_wer": true,
+        "pass": false
+      }
+    },
+    {
+      "artifacts": [
+        "checkpoints/transform-00050.pt",
+        "final_transform.pt"
+      ],
+      "completed_updates": 50,
+      "transform_digest": "f415a0b9fc6ca4fb",
+      "alpha": 0.75,
+      "metrics": {
+        "scored_pairs": 12,
+        "isr": 1.0,
+        "isr_control": 1.0,
+        "isr_degradation": 0.0,
+        "gate_isr": true,
+        "emotion_prob": 0.6603105664253235,
+        "emotion_prob_control": 0.5006954073905945,
+        "emotion_delta_mean": 0.1596151739358902,
+        "emotion_delta_ci": [
+          -0.22077018022537231,
+          0.5194578766822815
+        ],
+        "gate_emotion": false,
+        "speaker_sim": 0.8518627285957336,
+        "speaker_sim_control": 0.8899702429771423,
+        "speaker_degradation": 0.03810751438140869,
+        "gate_speaker_abs": true,
+        "gate_speaker_degradation": true,
+        "wer": {
+          "treated": {
+            "substitutions": 4,
+            "deletions": 1,
+            "insertions": 1,
+            "errors": 6,
+            "reference_words": 87,
+            "wer": 0.06896551724137931
+          },
+          "control": {
+            "substitutions": 4,
+            "deletions": 0,
+            "insertions": 1,
+            "errors": 5,
+            "reference_words": 87,
+            "wer": 0.05747126436781609
+          },
+          "delta": 0.011494252873563218,
+          "max_delta": 0.06,
+          "pass": true
+        },
+        "gate_wer": true,
+        "pass": false
+      }
+    },
+    {
+      "artifacts": [
+        "checkpoints/transform-00050.pt",
+        "final_transform.pt"
+      ],
+      "completed_updates": 50,
+      "transform_digest": "f415a0b9fc6ca4fb",
+      "alpha": 1.0,
+      "metrics": {
+        "scored_pairs": 12,
+        "isr": 1.0,
+        "isr_control": 1.0,
+        "isr_degradation": 0.0,
+        "gate_isr": true,
+        "emotion_prob": 0.44147858023643494,
+        "emotion_prob_control": 0.5040663480758667,
+        "emotion_delta_mean": -0.06258778274059296,
+        "emotion_delta_ci": [
+          -0.401898592710495,
+          0.28437095880508423
+        ],
+        "gate_emotion": false,
+        "speaker_sim": 0.8342018127441406,
+        "speaker_sim_control": 0.8510237336158752,
+        "speaker_degradation": 0.01682192087173462,
+        "gate_speaker_abs": false,
+        "gate_speaker_degradation": true,
+        "wer": {
+          "treated": {
+            "substitutions": 6,
+            "deletions": 12,
+            "insertions": 0,
+            "errors": 18,
+            "reference_words": 87,
+            "wer": 0.20689655172413793
+          },
+          "control": {
+            "substitutions": 3,
+            "deletions": 1,
+            "insertions": 0,
+            "errors": 4,
+            "reference_words": 87,
+            "wer": 0.04597701149425287
+          },
+          "delta": 0.16091954022988506,
+          "max_delta": 0.06,
+          "pass": false
+        },
+        "gate_wer": false,
+        "pass": false
+      }
+    },
+    {
+      "artifacts": [
+        "checkpoints/transform-00050.pt",
+        "final_transform.pt"
+      ],
+      "completed_updates": 50,
+      "transform_digest": "f415a0b9fc6ca4fb",
+      "alpha": 1.25,
+      "metrics": {
+        "scored_pairs": 12,
+        "isr": 1.0,
+        "isr_control": 1.0,
+        "isr_degradation": 0.0,
+        "gate_isr": true,
+        "emotion_prob": 0.46749016642570496,
+        "emotion_prob_control": 0.07077229768037796,
+        "emotion_delta_mean": 0.3967178761959076,
+        "emotion_delta_ci": [
+          0.09491641819477081,
+          0.6971797943115234
+        ],
+        "gate_emotion": true,
+        "speaker_sim": 0.6976460814476013,
+        "speaker_sim_control": 0.7981751561164856,
+        "speaker_degradation": 0.10052907466888428,
+        "gate_speaker_abs": false,
+        "gate_speaker_degradation": false,
+        "wer": {
+          "treated": {
+            "substitutions": 12,
+            "deletions": 14,
+            "insertions": 0,
+            "errors": 26,
+            "reference_words": 87,
+            "wer": 0.2988505747126437
+          },
+          "control": {
+            "substitutions": 5,
+            "deletions": 12,
+            "insertions": 0,
+            "errors": 17,
+            "reference_words": 87,
+            "wer": 0.19540229885057472
+          },
+          "delta": 0.10344827586206898,
+          "max_delta": 0.06,
+          "pass": false
+        },
+        "gate_wer": false,
+        "pass": false
+      }
+    }
+  ],
+  "selection": {
+    "criterion": "maximum mean emotion-probability delta among candidates passing emotion, speaker, ISR, and WER gates",
+    "feasible": true,
+    "best": {
+      "artifacts": [
+        "checkpoints/transform-00030.pt",
+        "best_transform.pt"
+      ],
+      "completed_updates": 30,
+      "transform_digest": "b9a2acbf72467638",
+      "alpha": 0.73,
+      "metrics": {
+        "scored_pairs": 12,
+        "isr": 1.0,
+        "isr_control": 1.0,
+        "isr_degradation": 0.0,
+        "gate_isr": true,
+        "emotion_prob": 0.8333023190498352,
+        "emotion_prob_control": 0.520481526851654,
+        "emotion_delta_mean": 0.3128208518028259,
+        "emotion_delta_ci": [
+          0.08747155964374542,
+          0.5631270408630371
+        ],
+        "gate_emotion": true,
+        "speaker_sim": 0.8667944073677063,
+        "speaker_sim_control": 0.8941373229026794,
+        "speaker_degradation": 0.027342915534973145,
+        "gate_speaker_abs": true,
+        "gate_speaker_degradation": true,
+        "wer": {
+          "treated": {
+            "substitutions": 1,
+            "deletions": 0,
+            "insertions": 0,
+            "errors": 1,
+            "reference_words": 87,
+            "wer": 0.011494252873563218
+          },
+          "control": {
+            "substitutions": 2,
+            "deletions": 0,
+            "insertions": 0,
+            "errors": 2,
+            "reference_words": 87,
+            "wer": 0.022988505747126436
+          },
+          "delta": -0.011494252873563218,
+          "max_delta": 0.06,
+          "pass": true
+        },
+        "gate_wer": true,
+        "pass": true
+      }
+    },
+    "best_observed": {
+      "artifacts": [
+        "checkpoints/transform-00045.pt"
+      ],
+      "completed_updates": 45,
+      "transform_digest": "f46bc932cb62eddf",
+      "alpha": 1.25,
+      "metrics": {
+        "scored_pairs": 12,
+        "isr": 1.0,
+        "isr_control": 1.0,
+        "isr_degradation": 0.0,
+        "gate_isr": true,
+        "emotion_prob": 0.712719738483429,
+        "emotion_prob_control": 0.07077229768037796,
+        "emotion_delta_mean": 0.6419474482536316,
+        "emotion_delta_ci": [
+          0.3136526644229889,
+          0.9111061096191406
+        ],
+        "gate_emotion": true,
+        "speaker_sim": 0.7292029857635498,
+        "speaker_sim_control": 0.7981751561164856,
+        "speaker_degradation": 0.06897217035293579,
+        "gate_speaker_abs": false,
+        "gate_speaker_degradation": false,
+        "wer": {
+          "treated": {
+            "substitutions": 12,
+            "deletions": 14,
+            "insertions": 0,
+            "errors": 26,
+            "reference_words": 87,
+            "wer": 0.2988505747126437
+          },
+          "control": {
+            "substitutions": 5,
+            "deletions": 12,
+            "insertions": 0,
+            "errors": 17,
+            "reference_words": 87,
+            "wer": 0.19540229885057472
+          },
+          "delta": 0.10344827586206898,
+          "max_delta": 0.06,
+          "pass": false
+        },
+        "gate_wer": false,
+        "pass": false
+      }
+    }
+  },
+  "wer_contract": {
+    "enabled": true,
+    "model_id": "openai/whisper-large-v3-turbo",
+    "revision": "41f01f3fe87f28c78e2fbf8b568835947dd65ed9",
+    "max_absolute_degradation": 0.06,
+    "min_reference_words": 1,
+    "configured_full_panel_min_reference_words": 100,
+    "provisional_screen": true,
+    "comparison": "matched raw-vector control at the same alpha"
+  }
+}

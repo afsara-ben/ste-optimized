@@ -6,6 +6,7 @@
     ste-optimized train      --config configs/angry.yaml [--seed N] [--output DIR]
                              [--max-updates N] [--distributed ddp_rows]
     ste-optimized evaluate   --config configs/angry.yaml --transform PATH
+    ste-optimized evaluate-checkpoints --config configs/angry.yaml --run-dir DIR
     ste-optimized smoke      --config configs/angry-smoke.yaml
                              [--pair-id 0011:000254] [--output DIR]
 
@@ -59,6 +60,26 @@ def main(argv: list[str] | None = None) -> int:
     _add_common(p)
     p.add_argument("--transform", required=True)
     p.add_argument("--output", default="panel_report.json")
+
+    p = sub.add_parser(
+        "evaluate-checkpoints",
+        help="rank all transform snapshots on one fixed gated validation panel",
+    )
+    _add_common(p)
+    p.add_argument("--run-dir", required=True,
+                   help="training output containing checkpoints/final_transform.pt")
+    p.add_argument("--output", default=None,
+                   help="report path (default: RUN_DIR/checkpoint_panel.json)")
+    p.add_argument("--rows", type=int, default=None,
+                   help="speaker-balanced held-out rows (default: full panel)")
+    p.add_argument(
+        "--split", choices=["validation", "test"], default="validation",
+        help="held-out panel split (default: validation)",
+    )
+    p.add_argument(
+        "--alphas", type=float, nargs="*", default=None,
+        help="alpha override; omit or pass no values to use config eval.alphas",
+    )
 
     p = sub.add_parser(
         "smoke", help="bounded one-pair real angry-transform proof on CUDA"
@@ -124,6 +145,15 @@ def main(argv: list[str] | None = None) -> int:
         transform, _prov = load_transform(args.transform)
         report = full_panel(cfg, transform, args.output)
         print(json.dumps(report["gates"], indent=2))
+        return 0
+
+    if args.cmd == "evaluate-checkpoints":
+        from .evaluation import checkpoint_panel
+        report = checkpoint_panel(
+            cfg, args.run_dir, args.output,
+            rows_limit=args.rows, alphas=args.alphas, split=args.split,
+        )
+        print(json.dumps(report["selection"], indent=2))
         return 0
 
     if args.cmd == "smoke":

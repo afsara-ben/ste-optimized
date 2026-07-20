@@ -52,6 +52,7 @@ def test_init_accepts_preloaded_models_and_in_memory_data(
         split="train",
     )]
     cfg = ExperimentConfig()
+    cfg.asr.enabled = False
     cfg.model.device = "cpu"
     cfg.model.hidden_size = 4
     cfg.train.rank = 2
@@ -135,6 +136,23 @@ def test_zero_wall_bound_stops_before_update_and_still_exports(tmp_path):
     assert trainer.attempts == 0
     assert logs[0]["event"] == "bounded_stop"
     assert logs[0]["reason"] == "max_wall_seconds"
+    assert exports == [tmp_path / "final_transform.pt"]
+
+
+def test_failed_cadence_sentinel_is_not_exported_as_best(tmp_path):
+    trainer, logs, exports = _loop_only_trainer(tmp_path, max_attempts=1)
+
+    def run_update():
+        trainer.completed += 1
+        return {"skipped": False}
+
+    trainer.run_update = run_update
+    trainer.train(cadence_eval=lambda _current: -1.0)
+
+    cadence = next(row for row in logs if row["event"] == "cadence_eval")
+    assert cadence["eligible"] is False
+    assert cadence["improved"] is False
+    assert trainer.best_metric == -float("inf")
     assert exports == [tmp_path / "final_transform.pt"]
 
 

@@ -10,6 +10,7 @@ def _arm(probs):
         ],
         "termination_rate": 1.0,
         "mean_speaker_sim": 0.95,
+        "wer": 0.1,
     }
 
 
@@ -18,7 +19,7 @@ def test_mean_gain_cannot_hide_three_row_regressions():
     unsteered = _arm([0.10, 0.10, 0.10, 0.10])
     learned = _arm([0.90, 0.09, 0.09, 0.09])
 
-    constraints = _arm_constraints(learned, unsteered, cfg)
+    constraints = _arm_constraints(learned, unsteered, _arm([0.1] * 4), cfg)
 
     assert constraints["rows_angrier_than_unsteered"] == 1
     assert not constraints["row_directionality"]

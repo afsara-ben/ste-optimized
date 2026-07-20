@@ -35,6 +35,8 @@ from .experts import ExpertSuite, resample_to_expert
 from .hooks import DecodeActivationCapture
 from .training import Trainer
 from .transform import save_transform
+from .wer_metrics import corpus_wer
+from .whisper_asr import WhisperASRExpert
 
 
 TRAIN_BASES = 4
@@ -91,6 +93,20 @@ def run_smoke(
     run_t0 = time.perf_counter()
     backend = QwenTTSBackend(cfg.model)
     experts = ExpertSuite.load(cfg.model.device)
+    asr_t0 = time.perf_counter()
+    asr = WhisperASRExpert(
+        device=cfg.model.device,
+        model_id=cfg.asr.model_id,
+        revision=cfg.asr.revision,
+        dtype={
+            "float16": torch.float16,
+            "bfloat16": torch.bfloat16,
+            "float32": torch.float32,
+        }[cfg.asr.dtype],
+        language=cfg.asr.language,
+        task=cfg.asr.task,
+    )
+    asr_load_seconds = time.perf_counter() - asr_t0
 
     pair = _find_pair(cfg, pair_id)
     contrast, contrast_source = _load_or_extract_selected_contrast(
@@ -127,6 +143,7 @@ def run_smoke(
     unsteered = _generate_score_arm(
         backend,
         experts,
+        asr,
         cfg,
         validation_bases,
         validation_entries,
@@ -142,6 +159,7 @@ def run_smoke(
             _generate_score_arm(
                 backend,
                 experts,
+                asr,
                 cfg,
                 validation_bases,
                 validation_entries,
@@ -166,6 +184,7 @@ def run_smoke(
         DistributedContext(mode="none"),
         backend=backend,
         experts=experts,
+        asr=asr,
         contrasts=[contrast],
         bases=train_bases,
     )
@@ -201,6 +220,7 @@ def run_smoke(
         checkpoint = _evaluate_checkpoint(
             backend=backend,
             experts=experts,
+            asr=asr,
             cfg=cfg,
             transform=trainer.transform,
             raw_vector=vector,
@@ -210,6 +230,7 @@ def run_smoke(
             seed=eval_seed,
             update=trainer.completed,
             unsteered=unsteered,
+            raw_arms=raw_arms,
             audio_root=audio_root,
         )
         candidate_history.append(checkpoint)
@@ -268,6 +289,7 @@ def run_smoke(
         "cuda": cuda,
         "attention_runtime": backend.attention_runtime,
         "model_load_seconds": backend.load_seconds,
+        "asr_load_seconds": asr_load_seconds,
         "train_base_ids": [b.base_id for b in train_bases],
         "validation_base_ids": [b.base_id for b in validation_bases],
         "batch_contract": {
@@ -368,7 +390,7 @@ def run_smoke(
         report["failure_reason"] = (
             "no evaluated learned checkpoint/alpha reached the minimum angry "
             "score and gain over unsteered output while satisfying row-level "
-            "directionality, termination, and speaker constraints"
+            "directionality, termination, speaker, and WER constraints"
         )
 
     report_path = out / "report.json"
@@ -404,6 +426,8 @@ def _validate_smoke_config(cfg: ExperimentConfig) -> None:
         raise ValueError("smoke eval.alphas must contain positive values")
     if cfg.distributed.mode != "none":
         raise ValueError("the one-device smoke requires distributed.mode=none")
+    if not cfg.asr.enabled or cfg.asr.loss_weight <= 0:
+        raise ValueError("the smoke requires a positive Whisper ASR loss")
 
 
 def _require_cuda(device: str) -> dict[str, Any]:
@@ -628,6 +652,7 @@ def _base_prompt_row(base: BaseRecord) -> dict[str, str]:
 def _generate_score_arm(
     backend: QwenTTSBackend,
     experts: ExpertSuite,
+    asr: WhisperASRExpert,
     cfg: ExperimentConfig,
     bases: list[BaseRecord],
     entries: list[PromptEntry],
@@ -675,9 +700,18 @@ def _generate_score_arm(
         )
     _, angry = experts.emotion.loss(waves16, cfg.data.emotion)
     _, speaker = experts.speaker.loss(waves16, refs)
-    for row, prob, sim in zip(rows, angry.tolist(), speaker.tolist()):
+    transcripts = asr.transcribe(waves16)
+    wer = corpus_wer(
+        [base.target_text for base in bases],
+        transcripts,
+        min_reference_words=cfg.asr.min_validation_reference_words,
+    )
+    for row, prob, sim, transcript in zip(
+        rows, angry.tolist(), speaker.tolist(), transcripts
+    ):
         row["angry_prob"] = float(prob)
         row["speaker_sim"] = float(sim)
+        row["transcript"] = transcript
     return {
         "arm": arm,
         "alpha": float(alpha),
@@ -685,6 +719,8 @@ def _generate_score_arm(
         "rows": rows,
         "mean_angry_prob": _mean(float(p) for p in angry.tolist()),
         "mean_speaker_sim": _mean(float(s) for s in speaker.tolist()),
+        "wer": wer.wer,
+        "wer_counts": wer.as_dict(),
         "termination_rate": _mean(1.0 if ok else 0.0 for ok in generated.terminated),
         "generation_wall_seconds": generated.wall_seconds,
         "native_qwen_batch_size": len(entries),
@@ -695,6 +731,7 @@ def _evaluate_checkpoint(
     *,
     backend: QwenTTSBackend,
     experts: ExpertSuite,
+    asr: WhisperASRExpert,
     cfg: ExperimentConfig,
     transform,
     raw_vector: torch.Tensor,
@@ -704,6 +741,7 @@ def _evaluate_checkpoint(
     seed: int,
     update: int,
     unsteered: dict[str, Any],
+    raw_arms: list[dict[str, Any]],
     audio_root: Path,
 ) -> dict[str, Any]:
     with torch.no_grad():
@@ -713,6 +751,7 @@ def _evaluate_checkpoint(
         arm = _generate_score_arm(
             backend,
             experts,
+            asr,
             cfg,
             bases,
             entries,
@@ -722,7 +761,12 @@ def _evaluate_checkpoint(
             arm=f"learned_update_{update:03d}_alpha_{_alpha_slug(alpha)}",
             audio_root=audio_root,
         )
-        arm["constraints"] = _arm_constraints(arm, unsteered, cfg)
+        raw_control = next(
+            raw for raw in raw_arms if float(raw["alpha"]) == float(alpha)
+        )
+        arm["constraints"] = _arm_constraints(
+            arm, unsteered, raw_control, cfg
+        )
         arms.append(arm)
     feasible = [arm for arm in arms if arm["constraints"]["pass"]]
     best = max(feasible, key=lambda arm: arm["mean_angry_prob"], default=None)
@@ -736,7 +780,8 @@ def _evaluate_checkpoint(
 
 
 def _arm_constraints(
-    arm: dict[str, Any], unsteered: dict[str, Any], cfg: ExperimentConfig
+    arm: dict[str, Any], unsteered: dict[str, Any],
+    raw_control: dict[str, Any], cfg: ExperimentConfig
 ) -> dict[str, Any]:
     degradation = unsteered["mean_speaker_sim"] - arm["mean_speaker_sim"]
     unsteered_by_base = {
@@ -751,12 +796,18 @@ def _arm_constraints(
         "speaker_absolute": arm["mean_speaker_sim"] >= MIN_MEAN_SPEAKER_SIM,
         "speaker_degradation": degradation <= MAX_SPEAKER_DEGRADATION,
         "row_directionality": improved_rows >= MIN_ROWS_ANGER_IMPROVED,
+        "wer": (
+            arm["wer"] - raw_control["wer"]
+            <= cfg.asr.max_wer_degradation
+        ),
     }
     return {
         **gates,
         "speaker_degradation_vs_unsteered": degradation,
         "rows_angrier_than_unsteered": improved_rows,
         "rows_evaluated": len(arm["rows"]),
+        "wer_degradation_vs_raw": arm["wer"] - raw_control["wer"],
+        "matched_raw_wer": raw_control["wer"],
         "pass": all(gates.values()),
     }
 
