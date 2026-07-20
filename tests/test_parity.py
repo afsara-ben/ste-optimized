@@ -26,6 +26,8 @@ import torch
 pytestmark = pytest.mark.gpu
 
 REF_WAV = os.environ.get("STE_OPT_REF_WAV", "")
+REF_TEXT = os.environ.get("STE_OPT_REF_TEXT", "Something about the house.")
+ATTN_IMPLEMENTATION = os.environ.get("STE_OPT_ATTN_IMPLEMENTATION", "sdpa")
 
 
 def _skip_reasons():
@@ -43,14 +45,14 @@ def backend():
         pytest.skip(reason)
     from ste_optimized.backend import QwenTTSBackend
     from ste_optimized.config import ModelConfig
-    return QwenTTSBackend(ModelConfig())
+    return QwenTTSBackend(ModelConfig(attn_implementation=ATTN_IMPLEMENTATION))
 
 
 @pytest.fixture(scope="module")
 def entries(backend):
     rows = [
         {"base_id": f"parity:{i}", "target_text": t,
-         "reference_text": "Something about the house.",
+         "reference_text": REF_TEXT,
          "reference_audio": REF_WAV}
         for i, t in enumerate(["The quick brown fox.",
                                "A bird sang in the tree."])

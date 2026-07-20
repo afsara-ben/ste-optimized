@@ -6,6 +6,8 @@
     ste-optimized train      --config configs/angry.yaml [--seed N] [--output DIR]
                              [--max-updates N] [--distributed ddp_rows]
     ste-optimized evaluate   --config configs/angry.yaml --transform PATH
+    ste-optimized smoke      --config configs/angry-smoke.yaml
+                             [--pair-id 0011:000254] [--output DIR]
 
 Multi-GPU: see distributed.py (seed_parallel recommended; ddp_rows optional
 under torchrun).
@@ -57,6 +59,15 @@ def main(argv: list[str] | None = None) -> int:
     _add_common(p)
     p.add_argument("--transform", required=True)
     p.add_argument("--output", default="panel_report.json")
+
+    p = sub.add_parser(
+        "smoke", help="bounded one-pair real angry-transform proof on CUDA"
+    )
+    _add_common(p)
+    p.add_argument("--pair-id", default="0011:000254",
+                   help="exact real neutral/angry manifest pair to train")
+    p.add_argument("--output", default=None,
+                   help="new artifact directory (default: timestamped run)")
 
     args = parser.parse_args(argv)
     cfg = load_config(args.config)
@@ -113,6 +124,22 @@ def main(argv: list[str] | None = None) -> int:
         transform, _prov = load_transform(args.transform)
         report = full_panel(cfg, transform, args.output)
         print(json.dumps(report["gates"], indent=2))
+        return 0
+
+    if args.cmd == "smoke":
+        from .smoke import SmokeFailure, run_smoke
+        try:
+            report = run_smoke(cfg, pair_id=args.pair_id,
+                               output_dir=args.output)
+        except SmokeFailure as exc:
+            print(f"smoke failed: {exc}", file=sys.stderr)
+            return 2
+        print(json.dumps({
+            "status": report["status"],
+            "selected": report["selected"],
+            "artifacts": report["artifacts"],
+            "report": report["report_path"],
+        }, indent=2))
         return 0
 
     return 1

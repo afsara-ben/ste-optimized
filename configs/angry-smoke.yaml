@@ -1,0 +1,73 @@
+# Minimal real-contrast angry-transform proof.
+#
+# The smoke CLI enforces K=1/M=4, reuses one loaded model set, stops as soon as
+# a learned checkpoint beats unsteered and matched raw-v controls, and fails
+# closed after the attempt/wall/update bounds below.
+
+model:
+  device: cuda:0
+  dtype: bfloat16
+  attn_implementation: flash_attention_2
+  layer: 15
+  hidden_size: 1024
+  steer_frame0_predictor: true
+
+sampling:
+  do_sample: true
+  top_k: 50
+  top_p: 1.0
+  temperature: 0.9
+  repetition_penalty: 1.05
+  min_new_tokens: 2
+  max_frames: 128
+  language: English
+  subtalker_temperature: 0.9
+  subtalker_top_k: 50
+  subtalker_top_p: 1.0
+
+data:
+  emotion: angry
+  dataset_dir: data/esd-smoke-prepared
+  contrasts_path: ""
+  bases_per_speaker: 5
+  # The chosen real pair is never silently discarded before the smoke.  Its
+  # extraction scores are still recorded, and deployment success has stricter
+  # held-out speaker/termination constraints.
+  min_pair_emotion_prob: 0.0
+  min_pair_speaker_sim: -1.0
+
+train:
+  contrasts_per_update: 1
+  bases_per_contrast: 4
+  chunk_rows: 2
+  min_row_survival: 0.8
+  max_updates: 5
+  max_attempts: 8
+  max_wall_seconds: 3600
+  eval_every: 1
+  early_stop_patience: 5
+  lr: 0.003
+  weight_decay: 0.0001
+  warmup_fraction: 0.05
+  grad_clip: 1.0
+  speaker_weight: 0.5
+  alpha: 1.0
+  rank: 16
+  seed: 42
+  reg_identity: 0.01
+  reg_cosine: 0.01
+  reg_norm: 0.01
+  checkpoint_every: 1
+  output_dir: runs/angry-smoke
+
+distributed:
+  mode: none
+  backend: nccl
+
+eval:
+  panel_seeds: 1
+  alphas: [0.75, 1.0, 1.25]
+  cadence_rows: 4
+  control_cache_dir: runs/angry-smoke-controls-unused
+  compute_wer: false
+  whisper_model: openai/whisper-large-v3-turbo
